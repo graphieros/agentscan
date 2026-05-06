@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const rootEl = shallowRef<HTMLElement | null>(null);
 
-onMounted(async () => {
+onMounted(() => {
   rootEl.value = document.documentElement;
 });
 
@@ -106,9 +106,36 @@ function isGitHubEventType(type: string | null): type is GitHubEventType {
   return type !== null && githubEventTypes.includes(type as GitHubEventType);
 }
 
+const eventTimestamps = computed<number[]>(() => {
+  return props.events
+    .filter((event) => event.created_at && isGitHubEventType(event.type))
+    .map((event) => new Date(event.created_at!).getTime())
+    .filter((timestamp) => !Number.isNaN(timestamp));
+});
+
+const totalDays = computed<number>(() => {
+  if (!eventTimestamps.value.length) {
+    return 0;
+  }
+
+  const firstTimestamp = Math.min(...eventTimestamps.value);
+  const lastTimestamp = Math.max(...eventTimestamps.value);
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  return Math.ceil((lastTimestamp - firstTimestamp) / oneDay);
+});
+
+const chunkHours = computed<number>(() => {
+  return totalDays.value < 4 ? 1 : 6;
+});
+
 function getEventHourKey(createdAt: string): string {
   const date = new Date(createdAt);
-  date.setUTCMinutes(0, 0, 0);
+  const bucketHour =
+    Math.floor(date.getUTCHours() / chunkHours.value) * chunkHours.value;
+
+  date.setUTCHours(bucketHour, 0, 0, 0);
+
   return date.toISOString();
 }
 
@@ -123,10 +150,12 @@ const eventHours = computed<string[]>(() => {
 });
 
 const completeHours = computed<string[]>(() => {
-  return getCompleteHourRange(eventHours.value);
+  return getCompleteHourRange(eventHours.value, chunkHours.value);
 });
 
-const hasEnoughHours = computed<boolean>(() => completeHours.value.length > 1);
+const hasEnoughHours = computed<boolean>(() => {
+  return completeHours.value.length > 1;
+});
 
 function createStacklineDataset(
   events: GitHubEvent[],
@@ -141,9 +170,7 @@ function createStacklineDataset(
     if (!event.created_at || !isGitHubEventType(event.type)) {
       continue;
     }
-
     const hour = getEventHourKey(event.created_at);
-
     counts[event.type][hour] = (counts[event.type][hour] || 0) + 1;
   }
 
@@ -170,6 +197,7 @@ const config = computed<VueUiStacklineConfig>(() => {
     style: {
       chart: {
         backgroundColor: "transparent",
+        color: colors.value.textMuted,
         grid: {
           x: {
             axisColor: colors.value.border,
@@ -229,8 +257,8 @@ const config = computed<VueUiStacklineConfig>(() => {
           },
         },
         padding: {
-          left: 48,
-          right: 48,
+          left: 52,
+          right: 52,
         },
         tooltip: {
           useDefaultTimeFormat: false,
@@ -243,7 +271,17 @@ const config = computed<VueUiStacklineConfig>(() => {
           fontSize: isAboveMd.value ? undefined : 10,
         },
         zoom: {
-          show: false,
+          show: true,
+          color: colors.value.textMuted,
+          minimap: {
+            show: true,
+            selectedColorOpacity: 0.1,
+            indicatorColor: colors.value.text,
+            frameColor: colors.value.border,
+            selectedColor: colors.value.textMuted,
+            handleBorderColor: colors.value.borderLight,
+            handleFill: colors.value.bg,
+          },
         },
       },
     },
