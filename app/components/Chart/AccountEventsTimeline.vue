@@ -248,11 +248,3 @@ const config = computed<VueUiStacklineConfig>(() => {
     <VueUiStackline v-if="hasEnoughDays" :dataset="dataset" :config="config" />
   </ClientOnly>
 </template>
-
-<style>
-@media screen and (min-width: 768px) {
-  .vue-data-ui-tooltip {
-    margin-left: 130px !important;
-  }
-}
-</style>

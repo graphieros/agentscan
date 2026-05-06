@@ -77,3 +77,9 @@ body {
   color: var(--text);
   min-height: 100vh;
 }
+
+@media screen and (min-width: 768px) {
+  .vue-data-ui-tooltip {
+    margin-left: 130px !important;
+  }
+}
