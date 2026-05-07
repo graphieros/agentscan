@@ -70,8 +70,9 @@ const averageScoreCurrentDay = computed(() => {
   const latestTimestamp = Math.max(
     ...data.map((d) => new Date(d.created_at).getTime()),
   );
+  const latestDate = new Date(latestTimestamp).toISOString().slice(0, 10);
   const latestEntries = data.filter(
-    (d) => new Date(d.created_at).getTime() === latestTimestamp,
+    (d) => new Date(d.created_at).toISOString().slice(0, 10) === latestDate,
   );
   if (latestEntries.length === 0) return 100;
   const total = latestEntries.reduce((sum, d) => sum + d.score, 0);
