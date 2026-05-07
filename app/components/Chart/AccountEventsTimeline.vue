@@ -9,6 +9,7 @@ import type { GitHubEvent, GitHubEventType } from "~~/shared/types/identity";
 import { githubEventTypes } from "~~/shared/types/identity";
 import "vue-data-ui/style.css";
 import { useElementSize } from "@vueuse/core";
+import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
 
 const props = defineProps<{
   events: GitHubEvent[];
@@ -16,6 +17,7 @@ const props = defineProps<{
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
+const chartRef = useTemplateRef("chartRef");
 
 onMounted(async () => {
   rootEl.value = document.documentElement;
@@ -159,6 +161,8 @@ const timestamps = computed<number[]>(() => {
 // true: show as percentages
 const isDistributed = shallowRef(false);
 
+const tooltipPosition = useChartTooltipPosition(chartRef);
+
 const config = computed<VueUiStacklineConfig>(() => {
   return {
     userOptions: { show: false },
@@ -231,7 +235,7 @@ const config = computed<VueUiStacklineConfig>(() => {
           color: colors.value.text,
           borderColor: colors.value.border,
           backgroundOpacity: 30,
-          position: "right",
+          position: tooltipPosition.value,
           offsetX: 24,
           offsetY: -64,
           fontSize: isAboveMd.value ? undefined : 10,
@@ -247,6 +251,11 @@ const config = computed<VueUiStacklineConfig>(() => {
 
 <template>
   <ClientOnly>
-    <VueUiStackline v-if="hasEnoughDays" :dataset="dataset" :config="config" />
+    <VueUiStackline
+      v-if="hasEnoughDays"
+      ref="chartRef"
+      :dataset="dataset"
+      :config="config"
+    />
   </ClientOnly>
 </template>
