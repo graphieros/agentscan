@@ -4,12 +4,14 @@ import {
   type VueUiStacklineDatasetItem,
   type VueUiStacklineConfig,
 } from "vue-data-ui/vue-ui-stackline";
+import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
 
 const props = defineProps<{
   data: Scan[] | undefined;
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
+const chartRef = useTemplateRef("chartRef");
 
 onMounted(async () => {
   rootEl.value = document.documentElement;
@@ -111,6 +113,8 @@ const timestamps = computed(() => {
 // true: show as percentages
 const isDistributed = shallowRef(false);
 
+const tooltipPosition = useChartTooltipPosition(chartRef);
+
 const config = computed<VueUiStacklineConfig>(() => {
   return {
     userOptions: { show: false },
@@ -181,6 +185,9 @@ const config = computed<VueUiStacklineConfig>(() => {
           color: colors.value.text,
           borderColor: colors.value.border,
           backgroundOpacity: 30,
+          position: tooltipPosition.value,
+          offsetX: 24,
+          offsetY: -64,
         },
         zoom: {
           show: false,
@@ -198,7 +205,7 @@ const config = computed<VueUiStacklineConfig>(() => {
       <input type="checkbox" v-model="isDistributed" />
     </label>
     <ClientOnly>
-      <VueUiStackline :dataset :config> </VueUiStackline>
+      <VueUiStackline ref="chartRef" :dataset :config> </VueUiStackline>
     </ClientOnly>
   </div>
 </template>
