@@ -231,7 +231,9 @@ const config = computed<VueUiStacklineConfig>(() => {
           color: colors.value.text,
           borderColor: colors.value.border,
           backgroundOpacity: 30,
-          offsetY: isAboveMd.value ? -64 : undefined,
+          position: "right",
+          offsetX: 24,
+          offsetY: -64,
           fontSize: isAboveMd.value ? undefined : 10,
         },
         zoom: {
