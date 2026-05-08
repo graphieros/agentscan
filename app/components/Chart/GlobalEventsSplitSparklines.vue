@@ -70,24 +70,6 @@ const configs = computed(() => {
     const seriesColor = unit.color ?? fallbackColor;
 
     return {
-      skeletonConfig: {
-        style: {
-          backgroundColor: "transparent",
-          dataLabel: {
-            show: true,
-            color: "transparent",
-          },
-          area: {
-            color: colors.value.borderHover,
-            useGradient: false,
-            opacity: 10,
-          },
-          line: {
-            color: colors.value.borderHover,
-          },
-        },
-      },
-      skeletonDataset: Array.from({ length: unit.series.length }, () => 0),
       style: {
         backgroundColor: "transparent",
         animation: { show: false },

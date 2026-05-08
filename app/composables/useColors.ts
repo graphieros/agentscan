@@ -116,7 +116,6 @@ export function useColors(
       "--event-automation-pr",
       "--event-automation-branch",
       "--event-automation-fork",
-      "--chart-transparent-selection",
     ],
     {
       element,
