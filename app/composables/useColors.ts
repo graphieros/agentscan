@@ -1,4 +1,10 @@
-import { computed, type ComputedRef, type Ref, unref } from "vue";
+import {
+  computed,
+  type ComputedRef,
+  type Ref,
+  type ShallowRef,
+  unref,
+} from "vue";
 import { useSupported } from "@vueuse/core";
 
 type CssVariableSource =
@@ -74,4 +80,47 @@ export function useCssVariables(
   });
 
   return { colors };
+}
+
+export function useColors(
+  element: ShallowRef<HTMLElement | null, HTMLElement | null>,
+) {
+  const { colors } = useCssVariables(
+    [
+      "--bg",
+      "--card",
+      "--border",
+      "--border-light",
+      "--text",
+      "--text-muted",
+      "--blue",
+      "--green",
+      "--green-hover",
+      "--text-green",
+      "--green-bg",
+      "--danger",
+      "--danger-hover",
+      "--danger-bg",
+      "--red",
+      "--red-hover",
+      "--red-bg",
+      "--event-fork",
+      "--event-branch",
+      "--event-pr",
+      "--event-organic-pr",
+      "--event-organic-branch",
+      "--event-organic-fork",
+      "--event-mixed-pr",
+      "--event-mixed-branch",
+      "--event-mixed-fork",
+      "--event-automation-pr",
+      "--event-automation-branch",
+      "--event-automation-fork",
+      "--chart-transparent-selection",
+    ],
+    {
+      element,
+    },
+  );
+  return colors;
 }
