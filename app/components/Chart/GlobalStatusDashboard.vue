@@ -5,6 +5,7 @@ import {
   type VueUiStacklineConfig,
 } from "vue-data-ui/vue-ui-stackline";
 import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
+import { useColors } from "~/composables/useColors";
 
 const props = defineProps<{
   data: Scan[] | undefined;
@@ -17,30 +18,7 @@ onMounted(async () => {
   rootEl.value = document.documentElement;
 });
 
-const { colors } = useCssVariables(
-  [
-    "--bg",
-    "--card",
-    "--border",
-    "--border-light",
-    "--text",
-    "--text-muted",
-    "--blue",
-    "--green",
-    "--green-hover",
-    "--text-green",
-    "--green-bg",
-    "--danger",
-    "--danger-hover",
-    "--danger-bg",
-    "--red",
-    "--red-hover",
-    "--red-bg",
-  ],
-  {
-    element: rootEl,
-  },
-);
+const colors = useColors(rootEl);
 
 function createStacklineDataset(source: Scan[] = []): {
   categories: string[];
@@ -83,9 +61,9 @@ function createStacklineDataset(source: Scan[] = []): {
     categories,
     dataset: [
       {
-        name: "organic",
-        series: categories.map((date) => sumsByDate[date]?.organic ?? 0),
-        color: colors.value.green,
+        name: "automated",
+        series: categories.map((date) => sumsByDate[date]?.automated ?? 0),
+        color: colors.value.red,
       },
       {
         name: "mixed",
@@ -93,9 +71,9 @@ function createStacklineDataset(source: Scan[] = []): {
         color: colors.value.dangerHover,
       },
       {
-        name: "automated",
-        series: categories.map((date) => sumsByDate[date]?.automated ?? 0),
-        color: colors.value.red,
+        name: "organic",
+        series: categories.map((date) => sumsByDate[date]?.organic ?? 0),
+        color: colors.value.green,
       },
     ],
   };
@@ -121,7 +99,7 @@ const config = computed<VueUiStacklineConfig>(() => {
     style: {
       chart: {
         backgroundColor: "transparent",
-        height: 300,
+        height: 255,
         grid: {
           stroke: colors.value.border,
           x: {
@@ -156,14 +134,16 @@ const config = computed<VueUiStacklineConfig>(() => {
         },
         highlighter: {
           color: colors.value.text,
+          useLine: true,
         },
         legend: {
+          show: false,
           backgroundColor: "transparent",
           color: colors.value.textMuted,
         },
         lines: {
           useArea: true,
-          areaOpacity: 1,
+          areaOpacity: 0.3,
           smooth: true,
           distributed: isDistributed.value,
           gradient: { show: false },
@@ -196,22 +176,40 @@ const config = computed<VueUiStacklineConfig>(() => {
     },
   };
 });
+
+const selectedIndex = shallowRef<number | undefined>(undefined);
+
+function setSelectedIndex(
+  payload:
+    | number
+    | { index?: number; selectedIndex?: number; seriesIndex?: number }
+    | undefined
+    | null,
+) {
+  if (typeof payload === "number") {
+    selectedIndex.value = payload;
+    return;
+  }
+
+  selectedIndex.value = payload?.index ?? payload?.selectedIndex ?? undefined;
+}
 </script>
 
 <template>
   <div>
-    <label>
-      Distributed
-      <input type="checkbox" v-model="isDistributed" />
-    </label>
-    <ClientOnly>
-      <VueUiStackline ref="chartRef" :dataset :config> </VueUiStackline>
-    </ClientOnly>
+    <div class="max-w-[450px] mx-auto mb-12">
+      <ChartGlobalEventsBreakdown :data="dataset" />
+    </div>
+
+    <ChartGlobalEventsSplitSparklines
+      :dataset
+      :dates="timestamps"
+      :selectedXIndex="selectedIndex"
+      @selectIndex="setSelectedIndex"
+    />
+
+    <div class="max-w-[500px] mx-auto mt-12">
+      <ChartGlobalEventsEvolution :data="dataset" :timestamps />
+    </div>
   </div>
 </template>
-
-<style scoped>
-:deep(.vue-data-ui-component svg path:nth-of-type(n + 3)) {
-  stroke: var(--bg) !important;
-}
-</style>

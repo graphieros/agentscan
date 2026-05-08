@@ -4,6 +4,7 @@ import {
   type VueUiDonutDatasetItem,
   type VueUiDonutConfig,
 } from "vue-data-ui/vue-ui-donut";
+import { useColors } from "~/composables/useColors";
 
 const props = defineProps<{
   events: GitHubEvent[];
@@ -60,30 +61,7 @@ onMounted(async () => {
   rootEl.value = document.documentElement;
 });
 
-const { colors } = useCssVariables(
-  [
-    "--bg",
-    "--card",
-    "--border",
-    "--border-light",
-    "--text",
-    "--text-muted",
-    "--blue",
-    "--green",
-    "--green-hover",
-    "--text-green",
-    "--green-bg",
-    "--danger",
-    "--danger-hover",
-    "--danger-bg",
-    "--red",
-    "--red-hover",
-    "--red-bg",
-  ],
-  {
-    element: rootEl,
-  },
-);
+const colors = useColors(rootEl);
 
 const config = computed<VueUiDonutConfig>(() => {
   return {

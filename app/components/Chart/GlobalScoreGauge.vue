@@ -6,7 +6,7 @@ import {
 } from "vue-data-ui/vue-ui-gauge";
 
 import "vue-data-ui/style.css";
-import { useCssVariables } from "~/composables/useColors";
+import { useColors } from "~/composables/useColors";
 
 const props = defineProps<{
   data: Scan[] | undefined;
@@ -18,42 +18,7 @@ onMounted(async () => {
   rootEl.value = document.documentElement;
 });
 
-const { colors } = useCssVariables(
-  [
-    "--bg",
-    "--card",
-    "--border",
-    "--border-light",
-    "--text",
-    "--text-muted",
-    "--blue",
-    "--green",
-    "--green-hover",
-    "--text-green",
-    "--green-bg",
-    "--danger",
-    "--danger-hover",
-    "--danger-bg",
-    "--red",
-    "--red-hover",
-    "--red-bg",
-    "--event-fork",
-    "--event-branch",
-    "--event-pr",
-    "--event-organic-pr",
-    "--event-organic-branch",
-    "--event-organic-fork",
-    "--event-mixed-pr",
-    "--event-mixed-branch",
-    "--event-mixed-fork",
-    "--event-automation-pr",
-    "--event-automation-branch",
-    "--event-automation-fork",
-  ],
-  {
-    element: rootEl,
-  },
-);
+const colors = useColors(rootEl);
 
 const averageScoreOverall = computed(() => {
   const count = (props.data ?? []).length;

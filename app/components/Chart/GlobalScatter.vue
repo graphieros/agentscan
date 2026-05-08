@@ -7,7 +7,7 @@ import {
 } from "vue-data-ui/vue-ui-scatter";
 
 import "vue-data-ui/style.css";
-import { useCssVariables } from "~/composables/useColors";
+import { useColors } from "~/composables/useColors";
 
 const props = defineProps<{
   data: Scan[] | undefined;
@@ -19,30 +19,7 @@ onMounted(async () => {
   rootEl.value = document.documentElement;
 });
 
-const { colors } = useCssVariables(
-  [
-    "--bg",
-    "--card",
-    "--border",
-    "--border-light",
-    "--text",
-    "--text-muted",
-    "--blue",
-    "--green",
-    "--green-hover",
-    "--text-green",
-    "--green-bg",
-    "--danger",
-    "--danger-hover",
-    "--danger-bg",
-    "--red",
-    "--red-hover",
-    "--red-bg",
-  ],
-  {
-    element: rootEl,
-  },
-);
+const colors = useColors(rootEl);
 
 type ScatterClusterParams = {
   dataset: Scan[];

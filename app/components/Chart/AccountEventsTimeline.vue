@@ -10,6 +10,9 @@ import { githubEventTypes } from "~~/shared/types/identity";
 import "vue-data-ui/style.css";
 import { useElementSize } from "@vueuse/core";
 import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
+import { useColors } from "~/composables/useColors";
+
+import("vue-data-ui/style.css");
 
 const props = defineProps<{
   events: GitHubEvent[];
@@ -23,48 +26,12 @@ onMounted(async () => {
   rootEl.value = document.documentElement;
 });
 
+const colors = useColors(rootEl);
 const { width } = useElementSize(rootEl);
 
 const mdBreakpoint = 768;
 
 const isAboveMd = computed(() => width.value >= mdBreakpoint);
-
-const { colors } = useCssVariables(
-  [
-    "--bg",
-    "--card",
-    "--border",
-    "--border-light",
-    "--text",
-    "--text-muted",
-    "--blue",
-    "--green",
-    "--green-hover",
-    "--text-green",
-    "--green-bg",
-    "--danger",
-    "--danger-hover",
-    "--danger-bg",
-    "--red",
-    "--red-hover",
-    "--red-bg",
-    "--event-fork",
-    "--event-branch",
-    "--event-pr",
-    "--event-organic-pr",
-    "--event-organic-branch",
-    "--event-organic-fork",
-    "--event-mixed-pr",
-    "--event-mixed-branch",
-    "--event-mixed-fork",
-    "--event-automation-pr",
-    "--event-automation-branch",
-    "--event-automation-fork",
-  ],
-  {
-    element: rootEl,
-  },
-);
 
 const eventConfig = computed(() => {
   const classification = props.classification || "mixed";
