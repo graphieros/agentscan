@@ -44,20 +44,20 @@ const config = computed<VueUiXyConfig>(() => ({
     },
     grid: {
       stroke: colors.value.borderLight,
-      showHorizontalLines: true,
-      showVerticalLines: true,
+      showHorizontalLines: false,
+      showVerticalLines: false,
       labels: {
         color: colors.value.textMuted,
-        fontSize: 24,
+        fontSize: 12,
         axis: {
           yLabel: "number of evaluated accounts",
           yLabelOffsetX: 18,
-          fontSize: 24,
+          fontSize: 12,
         },
         xAxisLabels: {
           values: props.timestamps,
           color: colors.value.textMuted,
-          fontSize: 20,
+          fontSize: 11,
           showOnlyAtModulo: true,
           modulo: 12,
           rotation: -30,
