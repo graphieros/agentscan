@@ -38,26 +38,22 @@ const config = computed<VueUiXyConfig>(() => ({
     userOptions: { show: false },
     backgroundColor: "transparent",
     color: colors.value.textMuted,
-    padding: {
-      left: 0,
-      right: 90,
-    },
     grid: {
       stroke: colors.value.borderLight,
       showHorizontalLines: false,
       showVerticalLines: false,
       labels: {
         color: colors.value.textMuted,
-        fontSize: 12,
+        fontSize: 14,
         axis: {
           yLabel: "number of evaluated accounts",
           yLabelOffsetX: 18,
-          fontSize: 12,
+          fontSize: 14,
         },
         xAxisLabels: {
           values: props.timestamps,
           color: colors.value.textMuted,
-          fontSize: 11,
+          fontSize: 14,
           showOnlyAtModulo: true,
           modulo: 12,
           rotation: -30,
@@ -97,21 +93,7 @@ const config = computed<VueUiXyConfig>(() => ({
       offsetY: -44,
     },
     zoom: {
-      show: true,
-      color: colors.value.text,
-      keepState: true,
-      preview: {
-        strokeDasharray: 6,
-        fill: "transparent",
-      },
-      minimap: {
-        show: true,
-        selectedColor: colors.value.textMuted,
-        selectedColorOpacity: 0.15,
-        indicatorColor: colors.value.text,
-        handleFill: colors.value.bg,
-        frameColor: colors.value.borderLight,
-      },
+      show: false,
     },
   },
 }));

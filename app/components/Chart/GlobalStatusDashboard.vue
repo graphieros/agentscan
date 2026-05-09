@@ -23,7 +23,7 @@ function createStacklineDataset(source: Scan[] = []): {
   const sumsByDate: Record<
     string,
     {
-      automated: number;
+      autiomation: number;
       mixed: number;
       organic: number;
     }
@@ -31,7 +31,7 @@ function createStacklineDataset(source: Scan[] = []): {
 
   categories.forEach((date) => {
     sumsByDate[date] = {
-      automated: 0,
+      autiomation: 0,
       mixed: 0,
       organic: 0,
     };
@@ -43,7 +43,7 @@ function createStacklineDataset(source: Scan[] = []): {
     if (!dateSums) return;
 
     if (item.score <= 50) {
-      dateSums.automated += 1;
+      dateSums.autiomation += 1;
     } else if (item.score <= 70) {
       dateSums.mixed += 1;
     } else {
@@ -55,8 +55,8 @@ function createStacklineDataset(source: Scan[] = []): {
     categories,
     dataset: [
       {
-        name: "automated",
-        series: categories.map((date) => sumsByDate[date]?.automated ?? 0),
+        name: "autiomation",
+        series: categories.map((date) => sumsByDate[date]?.autiomation ?? 0),
         color: colors.value.red,
       },
       {
