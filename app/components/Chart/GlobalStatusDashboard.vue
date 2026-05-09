@@ -105,27 +105,13 @@ const { width, height } = useElementSize(chartContainer);
 </script>
 
 <template>
-  <div class="relative w-full">
-    <div class="max-w-[450px] mx-auto mb-12">
+  <div class="relative h-full w-full flex flex-col">
+    <!-- <div>
       <ChartGlobalEventsBreakdown :data="dataset" />
+    </div> -->
+    <div class="flex-1 h-full no-chart-transition" ref="chartContainer">
+      <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
     </div>
-
-    <!-- <ChartGlobalEventsSplitSparklines
-      :dataset
-      :dates="timestamps"
-      :selectedXIndex="selectedIndex"
-      @selectIndex="setSelectedIndex"
-    /> -->
-  </div>
-  <div
-    class="absolute bottom-0 h-1/2 no-chart-transition"
-    ref="chartContainer"
-    :style="{
-      left: '-8%',
-      width: 'calc(100% + 16%)',
-    }"
-  >
-    <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
   </div>
 </template>
 
