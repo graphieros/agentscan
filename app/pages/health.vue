@@ -6,12 +6,18 @@ definePageMeta({
 });
 
 useHead({
-  title: "Verified automations | AgentScan",
+  title: "Ecosystem health | AgentScan",
   meta: [
-    { property: "og:title", content: "Verified automations | AgentScan" },
+    {
+      name: "description",
+      content:
+        "Track GitHub ecosystem health with daily analysis of 100 unique accounts from trending repositories. Monitor automation, spam, and bot activity patterns over time.",
+    },
+    { property: "og:title", content: "Ecosystem health | AgentScan" },
     {
       property: "og:description",
-      content: "A list of community flagged automated accounts",
+      content:
+        "Track GitHub ecosystem health with daily analysis of unique accounts from trending repositories. Monitor organic and automation activity patterns over time.",
     },
     { property: "og:type", content: "website" },
   ],
