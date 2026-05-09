@@ -11,6 +11,8 @@ import { useColors } from "~/composables/useColors";
 const props = defineProps<{
   data: VueUiStacklineDatasetItem[];
   timestamps: string[];
+  width: number;
+  height: number;
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
@@ -34,23 +36,32 @@ const dataset = computed<VueUiXyDatasetItem[]>(() =>
 const tooltipPosition = useChartTooltipPosition(chartRef);
 
 const config = computed<VueUiXyConfig>(() => ({
+  useCssAnimation: false,
   chart: {
     userOptions: { show: false },
     backgroundColor: "transparent",
     color: colors.value.textMuted,
+    width: props.width,
+    height: props.height,
+    padding: {
+      left: 0,
+      right: 0,
+    },
     grid: {
+      position: "middle",
       stroke: colors.value.borderLight,
       showHorizontalLines: false,
       showVerticalLines: false,
       labels: {
+        show: false,
         color: colors.value.textMuted,
         fontSize: 14,
         axis: {
-          yLabel: "number of evaluated accounts",
-          yLabelOffsetX: 18,
-          fontSize: 14,
+          yLabelOffsetX: 0,
+          fontSize: 24,
         },
         xAxisLabels: {
+          show: false,
           values: props.timestamps,
           color: colors.value.textMuted,
           fontSize: 14,
@@ -94,6 +105,20 @@ const config = computed<VueUiXyConfig>(() => ({
     },
     zoom: {
       show: false,
+      color: colors.value.text,
+      keepState: true,
+      preview: {
+        strokeDasharray: 6,
+        fill: "transparent",
+      },
+      minimap: {
+        show: true,
+        selectedColor: colors.value.textMuted,
+        selectedColorOpacity: 0.15,
+        indicatorColor: colors.value.text,
+        handleFill: colors.value.bg,
+        frameColor: colors.value.borderLight,
+      },
     },
   },
 }));
