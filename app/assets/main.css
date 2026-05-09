@@ -24,6 +24,7 @@
   --red: #f85149;
   --red-hover: #ff6a6a;
   --red-bg: #3d1515;
+  --amber: #f59e0b;
   --event-pr: #5b9df9;
   --event-branch: #4cb8a0;
   --event-fork: #f5a742;
@@ -61,6 +62,7 @@
   --red: #cf222e;
   --red-hover: #f85149;
   --red-bg: #ffebe9;
+  --amber: #f59e0b;
   --event-pr: #0052cc;
   --event-branch: #0d7c3e;
   --event-fork: #d97706;

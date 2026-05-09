@@ -64,7 +64,7 @@ function createStacklineDataset(source: Scan[] = []): {
       {
         name: "mixed",
         series: categories.map((date) => sumsByDate[date]?.mixed ?? 0),
-        color: colors.value.dangerHover,
+        color: colors.value.amber,
       },
       {
         name: "organic",
@@ -106,9 +106,6 @@ const { width, height } = useElementSize(chartContainer);
 
 <template>
   <div class="relative h-full w-full flex flex-col">
-    <!-- <div>
-      <ChartGlobalEventsBreakdown :data="dataset" />
-    </div> -->
     <div class="flex-1 h-full no-chart-transition" ref="chartContainer">
       <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
     </div>

@@ -104,6 +104,7 @@ export function useColors(
       "--red",
       "--red-hover",
       "--red-bg",
+      "--amber",
       "--event-fork",
       "--event-branch",
       "--event-pr",
