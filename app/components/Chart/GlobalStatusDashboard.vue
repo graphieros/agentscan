@@ -110,12 +110,12 @@ const { width, height } = useElementSize(chartContainer);
       <ChartGlobalEventsBreakdown :data="dataset" />
     </div>
 
-    <ChartGlobalEventsSplitSparklines
+    <!-- <ChartGlobalEventsSplitSparklines
       :dataset
       :dates="timestamps"
       :selectedXIndex="selectedIndex"
       @selectIndex="setSelectedIndex"
-    />
+    /> -->
   </div>
   <div
     class="absolute bottom-0 h-1/2 no-chart-transition"
