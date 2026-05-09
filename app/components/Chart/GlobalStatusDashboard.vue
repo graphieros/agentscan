@@ -105,7 +105,7 @@ const { width, height } = useElementSize(chartContainer);
 </script>
 
 <template>
-  <div class="relative h-screen">
+  <div class="relative w-full">
     <div class="max-w-[450px] mx-auto mb-12">
       <ChartGlobalEventsBreakdown :data="dataset" />
     </div>
@@ -116,17 +116,16 @@ const { width, height } = useElementSize(chartContainer);
       :selectedXIndex="selectedIndex"
       @selectIndex="setSelectedIndex"
     />
-
-    <div
-      class="absolute bottom-0 h-1/2 no-chart-transition"
-      ref="chartContainer"
-      :style="{
-        left: '-8%',
-        width: 'calc(100% + 16%)',
-      }"
-    >
-      <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
-    </div>
+  </div>
+  <div
+    class="absolute bottom-0 h-1/2 no-chart-transition"
+    ref="chartContainer"
+    :style="{
+      left: '-8%',
+      width: 'calc(100% + 16%)',
+    }"
+  >
+    <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
   </div>
 </template>
 
