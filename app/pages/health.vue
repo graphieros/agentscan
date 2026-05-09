@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { IdentityClassification } from "@unveil/identity";
+
 const { data, status, error } = useScan();
 
 definePageMeta({
@@ -22,6 +24,61 @@ useHead({
     { property: "og:type", content: "website" },
   ],
 });
+
+function classifyByScore(score: number): IdentityClassification {
+  if (score <= 50) return "automation";
+  if (score <= 70) return "mixed";
+  return "organic";
+}
+
+type ClassificationStats = Record<
+  IdentityClassification,
+  { count: number; percentage: number }
+>;
+
+type ClassificationConfig = {
+  key: IdentityClassification;
+  label: string;
+  bgColor: string;
+};
+
+const classificationConfigs: ClassificationConfig[] = [
+  { key: "organic", label: "Organic", bgColor: "bg-green-500" },
+  { key: "mixed", label: "Mixed", bgColor: "bg-amber-500" },
+  { key: "automation", label: "Automation", bgColor: "bg-orange-500" },
+];
+
+const latestDayStats = computed<ClassificationStats | null>(() => {
+  if (!data.value?.length) return null;
+
+  const totalCount = data.value.length;
+
+  const counts: Record<IdentityClassification, number> = {
+    organic: 0,
+    mixed: 0,
+    automation: 0,
+  };
+
+  data.value.forEach((item) => {
+    const classification = classifyByScore(item.score);
+    counts[classification]++;
+  });
+
+  return {
+    organic: {
+      count: counts.organic,
+      percentage: (counts.organic / totalCount) * 100,
+    },
+    mixed: {
+      count: counts.mixed,
+      percentage: (counts.mixed / totalCount) * 100,
+    },
+    automation: {
+      count: counts.automation,
+      percentage: (counts.automation / totalCount) * 100,
+    },
+  };
+});
 </script>
 
 <template>
@@ -37,17 +94,20 @@ useHead({
       </div>
     </header>
     <ul class="flex gap-4 mx-auto text-sm">
-      <li class="flex gap-2 items-center">
-        <span class="size-2 bg-green-500 block rounded-full"></span>
-        <p>Organic <span class="text-gh-muted">5.8% (46)</span></p>
-      </li>
-      <li class="flex gap-2 items-center">
-        <span class="size-2 bg-amber-500 block rounded-full"></span>
-        <p>Mixed <span class="text-gh-muted">4.3% (34)</span></p>
-      </li>
-      <li class="flex gap-2 items-center">
-        <span class="size-2 bg-orange-500 block rounded-full"></span>
-        <p>Automation <span class="text-gh-muted">90% (720)</span></p>
+      <li
+        v-for="config in classificationConfigs"
+        :key="config.key"
+        class="flex gap-2 items-center"
+      >
+        <span :class="`size-2 ${config.bgColor} block rounded-full`"></span>
+        <p>
+          {{ config.label }}
+          <span class="text-gh-muted">
+            {{ latestDayStats?.[config.key].percentage }}% ({{
+              latestDayStats?.[config.key].count
+            }})
+          </span>
+        </p>
       </li>
     </ul>
     <div class="h-full max-h-[300px] sm:max-h-[500px]">
