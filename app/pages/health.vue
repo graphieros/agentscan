@@ -35,9 +35,7 @@ useHead({
       loading data...
     </div>
     <div v-else-if="data" class="flex items-center justify-center w-full mt-12">
-      <div class="max-w-4xl">
-        <ChartGlobalStatusDashboard :data />
-      </div>
+      <ChartGlobalStatusDashboard :data />
     </div>
     <div v-else-if="error" class="text-red-600 dark:text-red-400 text-sm">
       {{ error.message }}
