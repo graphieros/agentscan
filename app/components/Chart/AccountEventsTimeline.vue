@@ -4,18 +4,13 @@ import {
   type VueUiXyDatasetItem,
   type VueUiXyConfig,
 } from "vue-data-ui";
-import {
-  VueUiStackline,
-  type VueUiStacklineDatasetItem,
-  type VueUiStacklineConfig,
-} from "vue-data-ui/vue-ui-stackline";
 import { getCompleteDayRange } from "./chart";
 import type { GitHubEvent, GitHubEventType } from "~~/shared/types/identity";
 import { githubEventTypes } from "~~/shared/types/identity";
-import "vue-data-ui/style.css";
 import { useElementSize } from "@vueuse/core";
 import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
 import { useColors } from "~/composables/useColors";
+import { identityConfig } from "@unveil/identity";
 
 import("vue-data-ui/style.css");
 
@@ -25,7 +20,6 @@ const props = defineProps<{
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
-const chartRef = useTemplateRef("chartRef"); // TODO: remove for stackline
 const chartLineRef = useTemplateRef("chartLineRef");
 
 onMounted(async () => {
@@ -35,10 +29,7 @@ onMounted(async () => {
 const colors = useColors(rootEl);
 const { width } = useElementSize(rootEl);
 
-const mdBreakpoint = 768; // TODO: remove for stackline
-const isAboveMd = computed(() => width.value >= mdBreakpoint); // TODO: remove for stackline
-
-const metrics = ["Forks", "New branches", "Pull requests", "Comments", "Total"];
+const metrics = ["Forks", "New branches", "Pull requests", "Total"];
 
 const selectedLegendItems = ref(metrics);
 
@@ -75,26 +66,23 @@ const eventConfig = computed(() => {
     ForkEvent: {
       name: "Forks",
       color: color.fork,
-      threshold: 10, // FIXME: plug real threshold
+      threshold: identityConfig.FORKS_EXTREME,
       visible: selectedLegendItems.value.includes("Forks"),
+      labelOffsetY: 40,
     },
     CreateEvent: {
       name: "New branches",
       color: color.branch,
-      threshold: 20, // FIXME: plug real threshold
+      threshold: null,
       visible: selectedLegendItems.value.includes("New branches"),
+      labelOffsetY: 0,
     },
     PullRequestEvent: {
       name: "Pull requests",
       color: color.pr,
-      threshold: 30, // FIXME: plug real threshold
+      threshold: identityConfig.PRS_TODAY_EXTREME,
       visible: selectedLegendItems.value.includes("Pull requests"),
-    },
-    IssueCommentEvent: {
-      name: "Comments",
-      color: color.comment,
-      threshold: 50, // FIXME: plug real threshold
-      visible: selectedLegendItems.value.includes("Comments"),
+      labelOffsetY: 6,
     },
   };
 });
@@ -110,6 +98,7 @@ type VueUiXyAnnotation = NonNullable<
 const thresholds = computed<VueUiXyAnnotation[]>(() => {
   return Object.values(eventConfig.value)
     .filter((kpi) => selectedLegendItems.value.includes(kpi.name))
+    .filter((kpi) => !!kpi.threshold)
     .map((kpi) => ({
       show: true,
       yAxis: {
@@ -118,7 +107,7 @@ const thresholds = computed<VueUiXyAnnotation[]>(() => {
           position: "start", // or 'end', to alternate if needed to prevent overlap between contiguous labels
           text: `${kpi.name} (${kpi.threshold})`,
           offsetX: -12, // if position == 'end', needs to be adapted
-          offsetY: 6,
+          offsetY: kpi.labelOffsetY,
           fontSize: 16,
           backgroundColor: "transparent",
           color: kpi.color,
@@ -149,6 +138,12 @@ const eventDays = computed(() => {
 
 const hasEnoughDays = computed<boolean>(() => eventDays.value.length > 1);
 
+const activeGitHubEventTypes = computed(() => {
+  return githubEventTypes.filter(
+    (eventType) => eventType !== "IssueCommentEvent",
+  );
+});
+
 function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
   const days = getCompleteDayRange(eventDays.value);
 
@@ -169,8 +164,8 @@ function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
     counts[event.type][day] = (counts[event.type][day] || 0) + 1;
   }
 
-  const individualEvents: VueUiXyDatasetItem[] = githubEventTypes.map(
-    (eventType) => {
+  const individualEvents: VueUiXyDatasetItem[] =
+    activeGitHubEventTypes.value.map((eventType) => {
       const config = eventConfig.value[eventType];
 
       return {
@@ -181,11 +176,10 @@ function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
         color: config.color,
         series: days.map((day) => counts[eventType][day] || 0),
       };
-    },
-  );
+    });
 
   const totalEvents: VueUiXyDatasetItem = {
-    type: "line", // or 'bar' if you prefer
+    type: "line",
     useArea: true,
     smooth: true,
     name: "Total",
@@ -199,42 +193,6 @@ function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
 
   return [...individualEvents, totalEvents];
 }
-
-// TODO: Remove for stackline
-function createStacklineDataset(
-  events: GitHubEvent[],
-): VueUiStacklineDatasetItem[] {
-  const days = getCompleteDayRange(eventDays.value);
-
-  const counts: Record<GitHubEventType, Record<string, number>> = {
-    PullRequestEvent: {},
-    CreateEvent: {},
-    ForkEvent: {},
-    IssueCommentEvent: {},
-  };
-
-  for (const event of events) {
-    if (!event.created_at || !isGitHubEventType(event.type)) {
-      continue;
-    }
-    const day = event.created_at.slice(0, 10);
-    counts[event.type][day] = (counts[event.type][day] || 0) + 1;
-  }
-
-  return githubEventTypes.map((eventType) => {
-    const config = eventConfig.value[eventType];
-    return {
-      name: config.name,
-      color: config.color,
-      series: days.map((day) => counts[eventType][day] || 0),
-    };
-  });
-}
-
-// TODO: remove for stackline
-const dataset = computed<VueUiStacklineDatasetItem[]>(() => {
-  return createStacklineDataset(props.events);
-});
 
 const datasetLine = computed(() => createLineDataset(props.events));
 
@@ -256,97 +214,7 @@ const timestamps = computed<number[]>(() => {
   );
 });
 
-// true: show as percentages
-const isDistributed = shallowRef(false); // TODO: remove for stackline
-
-const tooltipPosition = useChartTooltipPosition(chartRef); // TODO: remove for stackline
 const tooltipPositionLine = useChartTooltipPosition(chartLineRef);
-
-// TODO: remove for stackline
-const config = computed<VueUiStacklineConfig>(() => {
-  return {
-    userOptions: { show: false },
-    style: {
-      chart: {
-        backgroundColor: "transparent",
-        grid: {
-          x: {
-            axisColor: colors.value.border,
-            timeLabels: {
-              color: colors.value.textMuted,
-              rotation: -30,
-              autoRotate: {
-                enable: false,
-              },
-              values: timestamps.value,
-              showOnlyAtModulo: true,
-              modulo: 12,
-              datetimeFormatter: {
-                enable: true,
-                useUTC: true,
-                locale: "en",
-                options: {
-                  year: "dd MMM",
-                  month: "dd MMM",
-                  day: "dd MMM",
-                  minute: "dd MMM",
-                  second: "dd MMM",
-                },
-              },
-            },
-          },
-          y: {
-            showAxis: false,
-            axisLabels: { show: false },
-          },
-        },
-        highlighter: {
-          useLine: true,
-          color: colors.value.text,
-          opacity: 0,
-        },
-        legend: {
-          backgroundColor: "transparent",
-          color: colors.value.textMuted,
-        },
-        lines: {
-          useArea: true,
-          areaOpacity: 1,
-          smooth: true,
-          distributed: isDistributed.value,
-          gradient: { show: false },
-          totalValues: { show: false },
-          dataLabels: { show: false },
-          path: {
-            useSerieColor: false,
-            stroke: "transparent",
-          },
-          dot: {
-            stroke: "#FFFFFF",
-            radius: 0,
-          },
-        },
-        padding: {
-          left: 48,
-          right: 48,
-        },
-        tooltip: {
-          backgroundColor: colors.value.bg,
-          color: colors.value.text,
-          borderColor: colors.value.border,
-          backgroundOpacity: 30,
-          position: tooltipPosition.value,
-          offsetX: 24,
-          offsetY: -64,
-          fontSize: isAboveMd.value ? undefined : 10,
-        },
-        zoom: {
-          show: false,
-        },
-      },
-    },
-  };
-});
 
 const configLine = computed<VueUiXyConfig>(() => ({
   useCssAnimation: false,
@@ -420,13 +288,6 @@ const configLine = computed<VueUiXyConfig>(() => ({
 
 <template>
   <ClientOnly>
-    <!-- TODO: remove stackline ? -->
-    <VueUiStackline
-      v-if="hasEnoughDays"
-      ref="chartRef"
-      :dataset="dataset"
-      :config="config"
-    />
     <VueUiXy
       v-if="hasEnoughDays"
       ref="chartLineRef"
@@ -458,7 +319,7 @@ const configLine = computed<VueUiXyConfig>(() => ({
             v-for="series in datapoint"
             :key="`${series.name}-${series.absoluteIndex}`"
           >
-            <div class="h-3 w-3">
+            <div class="h-2 w-2">
               <svg viewBox="0 0 2 2" class="w-full h-full">
                 <circle cx="1" cy="1" r="1" :fill="series.color" />
               </svg>
@@ -478,7 +339,7 @@ const configLine = computed<VueUiXyConfig>(() => ({
             v-for="item in legend"
             @click="item.segregate()"
           >
-            <div class="w-3 h-3">
+            <div class="w-2 h-2">
               <svg viewBox="0 0 2 2" class="w-full h-full">
                 <circle :cx="1" :cy="1" :r="1" :fill="item.color" />
               </svg>
@@ -516,5 +377,11 @@ const configLine = computed<VueUiXyConfig>(() => ({
   :deep(.vdui-shape-circle) {
     transition: none !important;
   }
+}
+
+:deep(.vue-ui-xy-annotation-label) {
+  stroke: var(--bg);
+  stroke-width: 4;
+  paint-order: stroke;
 }
 </style>
