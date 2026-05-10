@@ -245,7 +245,7 @@ const configLine = computed<VueUiXyConfig>(() => ({
         show: false,
         yAxis: {
           scaleMax: maxValBetweenDatasetAndThresholds.value,
-          useNiceScale: true,
+          useNiceScale: false,
         },
         xAxisLabels: {
           show: true,
