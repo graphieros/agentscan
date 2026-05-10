@@ -38,7 +38,7 @@ const { width } = useElementSize(rootEl);
 const mdBreakpoint = 768; // TODO: remove for stackline
 const isAboveMd = computed(() => width.value >= mdBreakpoint); // TODO: remove for stackline
 
-const metrics = ["Forks", "New branches", "Pull requests", "Comments"];
+const metrics = ["Forks", "New branches", "Pull requests", "Comments", "Total"];
 
 const selectedLegendItems = ref(metrics);
 
@@ -149,35 +149,58 @@ const eventDays = computed(() => {
 
 const hasEnoughDays = computed<boolean>(() => eventDays.value.length > 1);
 
-// TODO: Remove for stackline
 function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
   const days = getCompleteDayRange(eventDays.value);
+
   const counts: Record<GitHubEventType, Record<string, number>> = {
     PullRequestEvent: {},
     CreateEvent: {},
     ForkEvent: {},
     IssueCommentEvent: {},
   };
+
   for (const event of events) {
     if (!event.created_at || !isGitHubEventType(event.type)) {
       continue;
     }
+
     const day = event.created_at.slice(0, 10);
+
     counts[event.type][day] = (counts[event.type][day] || 0) + 1;
   }
-  return githubEventTypes.map((eventType) => {
-    const config = eventConfig.value[eventType];
-    return {
-      type: "line",
-      useArea: true,
-      smooth: true,
-      name: config.name,
-      color: config.color,
-      series: days.map((day) => counts[eventType][day] || 0),
-    };
-  });
+
+  const individualEvents: VueUiXyDatasetItem[] = githubEventTypes.map(
+    (eventType) => {
+      const config = eventConfig.value[eventType];
+
+      return {
+        type: "line",
+        useArea: true,
+        smooth: true,
+        name: config.name,
+        color: config.color,
+        series: days.map((day) => counts[eventType][day] || 0),
+      };
+    },
+  );
+
+  const totalEvents: VueUiXyDatasetItem = {
+    type: "line",
+    useArea: false,
+    smooth: true,
+    name: "Total",
+    color: colors.value.borderLight,
+    series: days.map((_, index) => {
+      return individualEvents.reduce((total, event) => {
+        return total + Number(event.series[index]);
+      }, 0);
+    }),
+  };
+
+  return [...individualEvents, totalEvents];
 }
 
+// TODO: Remove for stackline
 function createStacklineDataset(
   events: GitHubEvent[],
 ): VueUiStacklineDatasetItem[] {
