@@ -217,7 +217,9 @@ const datasetLine = computed(() => createLineDataset(props.events));
 
 const maxValBetweenDatasetAndThresholds = computed(() => {
   const maxDataset = Math.max(
-    ...datasetLine.value.flatMap((d) => d.series.map((v) => v ?? 0)),
+    ...datasetLine.value
+      .filter((s) => selectedLegendItems.value.includes(s.name))
+      .flatMap((d) => d.series.map((v) => v ?? 0)),
   );
   const maxThreshold = Math.max(
     ...thresholds.value.map((t) => t.yAxis?.yTop ?? 0),
@@ -407,7 +409,7 @@ const configLine = computed<VueUiXyConfig>(() => ({
       @selectLegend="selectLegend"
     >
       <template #area-gradient="{ series, id }">
-        <linearGradient :id x1="0" x2="0" y1="0" y2="1">
+        <linearGradient :id="id" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" :stop-color="series.color" stop-opacity="0.3" />
           <stop offset="100%" :stop-color="colors.bg" stop-opacity="0" />
         </linearGradient>
@@ -456,3 +458,29 @@ const configLine = computed<VueUiXyConfig>(() => ({
     </VueUiXy>
   </ClientOnly>
 </template>
+
+<style scoped>
+:deep(.vue-data-ui-component) {
+  --super-ease-out: cubic-bezier(0.15, 0.75, 0.35, 1);
+}
+
+:deep(.vue-data-ui-component .serie_line_0 path),
+:deep(.vue-data-ui-component .serie_line_1 path),
+:deep(.vue-data-ui-component .serie_line_2 path),
+:deep(.vue-data-ui-component .serie_line_3 path),
+.svg-element-transition,
+:deep(.vdui-shape-circle) {
+  transition: all 0.5s var(--super-ease-out) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :deep(.vue-data-ui-component .serie_line_0 path),
+  :deep(.vue-data-ui-component .serie_line_1 path),
+  :deep(.vue-data-ui-component .serie_line_2 path),
+  :deep(.vue-data-ui-component .serie_line_3 path),
+  .svg-element-transition,
+  :deep(.vdui-shape-circle) {
+    transition: none !important;
+  }
+}
+</style>
