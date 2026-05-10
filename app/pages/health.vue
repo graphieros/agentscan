@@ -33,7 +33,7 @@ function classifyByScore(score: number): IdentityClassification {
 
 type ClassificationStats = Record<
   IdentityClassification,
-  { count: number; percentage: number }
+  { count: number; percentage: string }
 >;
 
 type ClassificationConfig = {
@@ -67,15 +67,15 @@ const latestDayStats = computed<ClassificationStats | null>(() => {
   return {
     organic: {
       count: counts.organic,
-      percentage: (counts.organic / totalCount) * 100,
+      percentage: ((counts.organic / totalCount) * 100).toFixed(2),
     },
     mixed: {
       count: counts.mixed,
-      percentage: (counts.mixed / totalCount) * 100,
+      percentage: ((counts.mixed / totalCount) * 100).toFixed(2),
     },
     automation: {
       count: counts.automation,
-      percentage: (counts.automation / totalCount) * 100,
+      percentage: ((counts.automation / totalCount) * 100).toFixed(2),
     },
   };
 });
