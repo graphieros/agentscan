@@ -16,7 +16,7 @@ onMounted(async () => {
 
 const colors = useColors(rootEl);
 
-function createStacklineDataset(source: Scan[] = []): {
+function createChartDataset(source: Scan[] = []): {
   categories: string[];
   dataset: VueUiStacklineDatasetItem[];
 } {
@@ -75,7 +75,7 @@ function createStacklineDataset(source: Scan[] = []): {
   };
 }
 
-const stacklineData = computed(() => createStacklineDataset(props.data ?? []));
+const stacklineData = computed(() => createChartDataset(props.data ?? []));
 const dataset = computed(() => stacklineData.value.dataset);
 
 const timestamps = computed(() => {
