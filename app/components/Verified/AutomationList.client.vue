@@ -26,8 +26,8 @@ const recentAutomations = computed<VerifiedAutomation[]>(() => {
         <Skeleton
           v-for="i in maxVisible"
           :key="`skeleton-${i}`"
-          width="w-32"
-          height="h-10"
+          width="w-24"
+          height="h-7.5"
           rounded="full"
         />
       </template>
