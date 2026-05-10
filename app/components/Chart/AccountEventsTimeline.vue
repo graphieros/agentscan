@@ -185,8 +185,8 @@ function createLineDataset(events: GitHubEvent[]): VueUiXyDatasetItem[] {
   );
 
   const totalEvents: VueUiXyDatasetItem = {
-    type: "line",
-    useArea: false,
+    type: "line", // or 'bar' if you prefer
+    useArea: true,
     smooth: true,
     name: "Total",
     color: colors.value.borderLight,
