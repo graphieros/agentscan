@@ -185,10 +185,10 @@ const heatmaps = computed(() =>
 function getDateFromHeatmapCell(datapoint: VueUiHeatmapDatapoint): string {
   const xName = datapoint?.xAxisName ?? "";
   const yName = datapoint?.yAxisName ?? "";
-  const [startLabel] = xName.split(" - ");
-
-  const weekStart = dayjs(`${startLabel} ${dayjs().year()}`, "MMM D YYYY");
-  const targetDate = weekStart.add(dayIndexes[yName] ?? 0, "day");
+  const weekIndex = weekLabels.value.indexOf(xName);
+  const weekKey = weekKeys.value[weekIndex];
+  if (!weekKey) return "";
+  const targetDate = dayjs(weekKey).add(dayIndexes[yName] ?? 0, "day");
 
   return targetDate.format("DD MMM (ddd)");
 }
