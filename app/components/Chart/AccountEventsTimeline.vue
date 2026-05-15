@@ -171,11 +171,10 @@ const isEmpty = computed(
 );
 
 const maxValue = computed(() => {
-  return Math.max(
-    ...datasetLine.value
-      .filter((s) => selectedLegendItems.value.includes(s.name))
-      .flatMap((d) => d.series.map((v) => v ?? 0)),
-  );
+  const values = datasetLine.value
+    .filter((s) => selectedLegendItems.value.includes(s.name))
+    .flatMap((d) => d.series.map((v) => v ?? 0));
+  return values.length ? Math.max(...values) : 0;
 });
 
 const timestamps = computed<number[]>(() => {
@@ -289,6 +288,24 @@ function alertIcons(data: Datapoints, zoomOffset = 0): PlotAlert[] {
       };
     });
 }
+
+function getSeriesThreshold(seriesName: string): number | null {
+  const datasetItem = datasetLine.value.find(
+    (item) => item.name === seriesName,
+  );
+  if (!datasetItem || !("threshold" in datasetItem)) return null;
+  return datasetItem.threshold as number | null;
+}
+
+function isTooltipAlert(series: {
+  name: string;
+  value: number | null;
+}): boolean {
+  const threshold = getSeriesThreshold(series.name);
+  return (
+    threshold !== null && series.value !== null && series.value >= threshold
+  );
+}
 </script>
 
 <template>
@@ -316,7 +333,7 @@ function alertIcons(data: Datapoints, zoomOffset = 0): PlotAlert[] {
       </template>
 
       <!-- Custom tooltip -->
-      <template #tooltip="{ datapoint, timeLabel }">
+      <template #tooltip="{ datapoint, timeLabel, seriesIndex }">
         <div class="flex flex-col">
           <div class="mb-1">{{ timeLabel.text }}</div>
           <div
@@ -331,6 +348,18 @@ function alertIcons(data: Datapoints, zoomOffset = 0): PlotAlert[] {
             </div>
             <span :style="{ color: colors.textMuted }">{{ series.name }}</span>
             <span>{{ series.value }}</span>
+            <svg
+              v-if="isTooltipAlert(series)"
+              viewBox="0 0 30 30"
+              class="w-5 h-5"
+              aria-hidden="true"
+            >
+              <path
+                d="M 2 30 L 14 13 L 8 13 L 11 0 L 0 17 L 6 17 L 2 30"
+                :fill="colors.amber"
+                :stroke="colors.bg"
+              />
+            </svg>
           </div>
         </div>
       </template>
