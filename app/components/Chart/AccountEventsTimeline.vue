@@ -102,9 +102,13 @@ const eventDays = computed(() => {
   ).sort();
 });
 
-const usesHourlyGranularity = computed<boolean>(
-  () => eventDays.value.length <= 2,
-);
+const completeDayLabels = computed<string[]>(() => {
+  return getCompleteDayRange(eventDays.value);
+});
+
+const usesHourlyGranularity = computed<boolean>(() => {
+  return completeDayLabels.value.length <= 2;
+});
 
 function roundToClosestHour(date: Date): Date {
   const rounded = new Date(date);
@@ -142,7 +146,7 @@ function getCompleteHourRange(events: GitHubEvent[]): string[] {
 const timeLabels = computed<string[]>(() => {
   return usesHourlyGranularity.value
     ? getCompleteHourRange(props.events)
-    : getCompleteDayRange(eventDays.value);
+    : completeDayLabels.value;
 });
 
 const hasEnoughDays = computed<boolean>(() => eventDays.value.length > 1);
