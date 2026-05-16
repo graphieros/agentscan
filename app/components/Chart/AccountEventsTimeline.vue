@@ -439,9 +439,7 @@ function getTooltipTimeLabel(index: number): string {
       <template #tooltip="{ datapoint, timeLabel, seriesIndex }">
         <div class="flex flex-col">
           <div class="mb-1">
-            <div class="mb-1">
-              {{ getTooltipTimeLabel(seriesIndex) }}
-            </div>
+            {{ getTooltipTimeLabel(seriesIndex) }}
           </div>
           <div
             class="flex flex-row gap-2 items-center"
