@@ -436,7 +436,7 @@ function getTooltipTimeLabel(index: number): string {
       </template>
 
       <!-- Custom tooltip -->
-      <template #tooltip="{ datapoint, timeLabel, seriesIndex }">
+      <template #tooltip="{ datapoint, seriesIndex }">
         <div class="flex flex-col">
           <div class="mb-1">
             {{ getTooltipTimeLabel(seriesIndex) }}
