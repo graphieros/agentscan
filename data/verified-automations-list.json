@@ -254,5 +254,12 @@
     "reason": "Self-disclosed as an AI agent",
     "issueUrl": "https://github.com/MatteoGabriele/agentscan/issues/125",
     "createdAt": "2026-05-16"
+  },
+  {
+    "username": "EXDEV-oss",
+    "id": 279178120,
+    "reason": "This account posted suspicious comments across multiple repositories attempting to move conversations off-platform to Telegram or email. The messages appeared automated or templated, were posted rapidly across many repos, and showed patterns consistent with scam or phishing attempts.",
+    "issueUrl": "https://github.com/MatteoGabriele/agentscan/issues/126",
+    "createdAt": "2026-05-16"
   }
 ]
