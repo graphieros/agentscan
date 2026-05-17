@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IdentityClassification } from "@unveil/identity";
 
-const { data } = useScan();
+const { data } = useEcosystemHealth();
 
 definePageMeta({
   layout: false,

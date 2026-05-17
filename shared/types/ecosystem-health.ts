@@ -1,4 +1,4 @@
-export type Scan = {
+export type EcosystemHealthItem = {
   created_at: string;
   hash: string;
   score: number;
