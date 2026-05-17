@@ -261,5 +261,12 @@
     "reason": "This account posted suspicious comments across multiple repositories attempting to move conversations off-platform to Telegram or email. The messages appeared automated or templated, were posted rapidly across many repos, and showed patterns consistent with scam or phishing attempts.",
     "issueUrl": "https://github.com/MatteoGabriele/agentscan/issues/126",
     "createdAt": "2026-05-16"
+  },
+  {
+    "username": "Sean-Kenneth-Doherty",
+    "id": 9375875,
+    "reason": "This account opened approximately 300 PRs across 90+ projects in under a week, showing clear automated bulk spam behavior.",
+    "issueUrl": "https://github.com/MatteoGabriele/agentscan/issues/128",
+    "createdAt": "2026-05-17"
   }
 ]
