@@ -285,6 +285,9 @@ const xAxisLabelValues = computed<string[]>(() => {
 const tooltipPositionLine = useChartTooltipPosition(chartLineRef);
 
 const configLine = computed<VueUiXyConfig>(() => ({
+  downsample: {
+    threshold: 5000,
+  },
   useCssAnimation: false,
   line: {
     useGradient: false,
