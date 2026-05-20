@@ -88,18 +88,28 @@ const eventConfig = computed(() => {
   };
 });
 
+const dayRangeLimit = 90;
+
 function isGitHubEventType(type: string | null): type is GitHubEventType {
   return type !== null && githubEventTypes.includes(type as GitHubEventType);
 }
 
 const eventDays = computed(() => {
-  return Array.from(
+  const days = Array.from(
     new Set(
       props.events
         .filter((event) => event.created_at && isGitHubEventType(event.type))
         .map((event) => event.created_at!.slice(0, 10)),
     ),
   ).sort();
+
+  const lastDay = days.at(-1);
+  if (!lastDay) return [];
+
+  const startDate = new Date(`${lastDay}T00:00:00.000Z`);
+  startDate.setUTCDate(startDate.getUTCDate() - dayRangeLimit + 1);
+  const startDay = startDate.toISOString().slice(0, 10);
+  return days.filter((day) => day >= startDay);
 });
 
 const completeDayLabels = computed<string[]>(() => {
