@@ -8,17 +8,10 @@ import { IdentifyResult } from "@unveil/identity";
 
 // Configuration
 const STATIC_SALT = "agentscan-v1";
-const USERS_TO_SCAN = 100;
-const MAX_PAGES = 10; // Search up to 10 pages to find enough unscanned users
 const API_TIMEOUT = 10000; // 10 seconds timeout for API calls
 const API_BASE_URL = "https://agentscan.tools";
 const DELAY_BETWEEN_SCANS = 1000; // 1 second conservative delay between identify-replicant API calls
 const DELAY_BETWEEN_GITHUB_CALLS = 200; // 200ms delay between GitHub API calls (random user fetches)
-
-interface ScannedHash {
-  hash: string;
-  scannedAt: string;
-}
 
 interface ScanResult {
   created_at: string;
@@ -35,28 +28,6 @@ interface ScanResult {
  */
 function generateUserHash(userId: number): string {
   return createHash("sha256").update(`${userId}:${STATIC_SALT}`).digest("hex");
-}
-
-/**
- * Load existing scanned user hashes
- */
-function loadScannedHashes(): Map<string, ScannedHash> {
-  const filePath = join(process.cwd(), "data", "scanned-users-hashes.json");
-  try {
-    const data = JSON.parse(readFileSync(filePath, "utf-8"));
-    return new Map(Object.entries(data));
-  } catch {
-    return new Map();
-  }
-}
-
-/**
- * Save scanned user hashes
- */
-function saveScannedHashes(hashes: Map<string, ScannedHash>): void {
-  const filePath = join(process.cwd(), "data", "scanned-users-hashes.json");
-  const data = Object.fromEntries(hashes);
-  writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
 /**
@@ -130,62 +101,66 @@ async function scanUser(
 }
 
 /**
- * Fetch active GitHub users from trending repositories
- * Gets contributors from popular repos - ensures we sample actually active users
+ * Fetch PR authors from the top 10 most-starred repositories
+ * Gets authors from recent pull requests - captures who's actively contributing to trending code
  */
-async function searchUsers(octokit: Octokit, pageNumber: number) {
-  const BATCH_SIZE = 100;
+async function searchUsers(octokit: Octokit) {
+  const TARGET_USERS = 10;
   const users: Array<{
     id: number;
     login: string;
     created_at: string;
     public_repos: number;
   }> = [];
+  const seenLogins = new Set<string>();
 
   try {
-    // Get trending repos from the last 7-14 days, varying by page to get different repos
-    const daysAgo = 7 + pageNumber * 2; // Page 1: 9 days ago, Page 2: 11 days ago, etc.
-    const trendingDate = new Date();
-    trendingDate.setDate(trendingDate.getDate() - daysAgo);
-    const dateString = trendingDate.toISOString().split("T")[0];
-
+    // Get top 10 most-starred repos
     const trendingRepos = await octokit.rest.search.repos({
-      q: `created:>${dateString} stars:>5`,
+      q: `stars:>5000`,
       sort: "stars",
       order: "desc",
-      per_page: 100, // Get more repos per page
-      page: pageNumber, // Use pageNumber to get different results
+      per_page: 10, // Get top 10 repos
     });
 
+    if (trendingRepos.data.items.length === 0) {
+      console.error("No trending repositories found");
+      return users;
+    }
+
     console.log(
-      `Page ${pageNumber}: Found ${trendingRepos.data.items.length} trending repositories`,
+      `\nFetching PR authors from top ${trendingRepos.data.items.length} most-starred repos`,
     );
 
-    const seenLogins = new Set<string>();
-
-    // Extract contributors from each repo
+    // Loop through each trending repo
     for (const repo of trendingRepos.data.items) {
-      if (users.length >= BATCH_SIZE) break;
-
-      // Skip if repo has no owner
+      if (users.length >= TARGET_USERS) break;
       if (!repo.owner) continue;
 
+      console.log(`\n  → ${repo.full_name} (⭐ ${repo.stargazers_count})`);
+
       try {
-        const contributors = await octokit.rest.repos.listContributors({
+        // Get recent PRs from this repo
+        const prs = await octokit.rest.pulls.list({
           owner: repo.owner.login,
           repo: repo.name,
-          per_page: 100,
+          state: "all",
+          sort: "created",
+          direction: "desc",
+          per_page: 30, // Get recent PRs
         });
 
-        // Get full profiles for contributors (search API returns limited data)
-        for (const contributor of contributors.data) {
-          if (users.length >= BATCH_SIZE) break;
-          if (!contributor.login) continue;
-          if (seenLogins.has(contributor.login)) continue;
+        console.log(`    Found ${prs.data.length} recent PRs`);
+
+        // Extract authors from PRs
+        for (const pr of prs.data) {
+          if (users.length >= TARGET_USERS) break;
+          if (!pr.user?.login) continue;
+          if (seenLogins.has(pr.user.login)) continue;
 
           try {
             const fullProfile = await octokit.rest.users.getByUsername({
-              username: contributor.login,
+              username: pr.user.login,
             });
 
             users.push({
@@ -195,10 +170,11 @@ async function searchUsers(octokit: Octokit, pageNumber: number) {
               public_repos: fullProfile.data.public_repos,
             });
 
-            seenLogins.add(contributor.login);
+            seenLogins.add(pr.user.login);
+            console.log(`      • ${pr.user.login}`);
           } catch (error) {
             console.error(
-              `Error fetching profile for ${contributor.login}:`,
+              `      ✗ Error fetching profile for ${pr.user.login}:`,
               (error as Error).message,
             );
           }
@@ -210,16 +186,16 @@ async function searchUsers(octokit: Octokit, pageNumber: number) {
         }
       } catch (error) {
         console.error(
-          `Error fetching contributors for ${repo.full_name}:`,
+          `    Error fetching PRs for ${repo.full_name}:`,
           (error as Error).message,
         );
       }
     }
 
     if (users.length === 0) {
-      console.error(
-        "Could not find any active users from trending repositories",
-      );
+      console.error("Could not find any PR authors from trending repositories");
+    } else {
+      console.log(`\nSuccessfully fetched ${users.length} unique PR authors`);
     }
   } catch (error) {
     console.error("Error searching trending repositories:", error);
@@ -238,109 +214,66 @@ async function main() {
   }
 
   const octokit = new Octokit({ auth: token });
-  const scannedHashes = loadScannedHashes();
   const scanResults = loadScanResults();
   const today = new Date().toISOString().split("T")[0];
 
-  // Count how many results with actual scores we already have today
-  const resultsWithScoresToday = scanResults.filter(
-    (r) => r.created_at === today && r.score !== null,
-  ).length;
-  const usersNeeded = Math.max(0, USERS_TO_SCAN - resultsWithScoresToday);
+  console.log(`Starting daily snapshot scan for ${today}`);
 
-  let completedCount = 0;
-  let pageNumber = 1;
+  const users = await searchUsers(octokit);
 
-  console.log(
-    `Starting daily scan - Need ${usersNeeded} more users with analysis (${resultsWithScoresToday} already done today)`,
-  );
-
-  if (usersNeeded === 0) {
-    console.log("✓ Already have 100 users with analysis for today");
-    return;
+  if (users.length === 0) {
+    console.error("No users found to scan");
+    process.exit(1);
   }
 
-  // Loop through pages until we've scanned enough users with actual analysis
-  while (completedCount < usersNeeded && pageNumber <= MAX_PAGES) {
-    console.log(`\nSearching page ${pageNumber}...`);
-    const users = await searchUsers(octokit, pageNumber);
+  console.log(`\nScanning ${users.length} unique PR authors...`);
 
-    if (users.length === 0) {
-      console.log("No more users found");
-      break;
+  let completedCount = 0;
+
+  for (const user of users) {
+    const hash = generateUserHash(user.id);
+
+    // Scan every user - we want a fresh daily snapshot
+    console.log(`→ Scanning user ${user.login} (ID: ${user.id})...`);
+    const scanData = await scanUser(
+      user.login,
+      user.created_at,
+      user.public_repos,
+    );
+
+    const score = scanData?.analysis.score;
+    const eventsCount = scanData?.eventsCount ?? 0;
+
+    // Save all results regardless of whether they were scanned before
+    if (score != null) {
+      const result: ScanResult = {
+        created_at: today,
+        hash,
+        score,
+        user_created_at: user.created_at,
+        user_public_repos_count: user.public_repos,
+        events_count: eventsCount,
+      };
+
+      scanResults.push(result);
+
+      completedCount++;
+      console.log(`✓ Completed [${completedCount}/${users.length}]`);
+    } else {
+      console.log(`✗ No score available`);
     }
 
-    for (const user of users) {
-      if (completedCount >= usersNeeded) {
-        break;
-      }
-
-      const hash = generateUserHash(user.id);
-
-      // Skip if already scanned
-      if (scannedHashes.has(hash)) {
-        console.log(
-          `⊘ Skipping user ${user.login} (ID: ${user.id}) - already scanned`,
-        );
-        continue;
-      }
-
-      // Scan the user (all contributors from trending repos are valid for trend data)
-      console.log(`→ Scanning user ${user.login} (ID: ${user.id})...`);
-      console.log(`  User data:`, JSON.stringify(user, null, 2));
-      const scanData = await scanUser(
-        user.login,
-        user.created_at,
-        user.public_repos,
-      );
-
-      const score = scanData?.analysis.score;
-      const eventsCount = scanData?.eventsCount ?? 0;
-
-      // Save all results with valid scores (contributors from trending repos = valid trend data)
-      if (score != null) {
-        const result: ScanResult = {
-          created_at: today,
-          hash,
-          score,
-          user_created_at: user.created_at,
-          user_public_repos_count: user.public_repos,
-          events_count: eventsCount,
-        };
-
-        scanResults.push(result);
-
-        // Mark as scanned only if analysis was successful
-        scannedHashes.set(hash, {
-          hash,
-          scannedAt: today,
-        });
-
-        completedCount++;
-        console.log(
-          `✓ Completed [${resultsWithScoresToday + completedCount}/${USERS_TO_SCAN}]`,
-        );
-      } else {
-        console.log(`✗ No score available`);
-      }
-
-      // Conservative delay between API calls to avoid rate limiting
-      await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_SCANS));
-    }
-
-    pageNumber++;
+    // Conservative delay between API calls to avoid rate limiting
+    await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_SCANS));
   }
 
   // Save the updated data
-  saveScannedHashes(scannedHashes);
   saveScanResults(scanResults);
 
   console.log(
-    `\n✓ Scan complete: ${completedCount} new users with analysis scanned today`,
+    `\n✓ Daily snapshot complete: ${completedCount} PR authors analyzed for ${today}`,
   );
-  console.log(
-    `Total users with analysis: ${scanResults.filter((r) => r.score !== null).length}`,
-  );
+  console.log(`Total historical scan results: ${scanResults.length}`);
 }
 
 main().catch((error) => {
