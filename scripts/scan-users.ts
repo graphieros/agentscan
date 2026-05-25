@@ -126,9 +126,9 @@ async function searchUsers(octokit: Octokit) {
   }> = [];
 
   try {
-    // Get top 10 most-starred repos
+    // Get top 10 most-starred framework/library repos
     const trendingRepos = await octokit.rest.search.repos({
-      q: `stars:>5000`,
+      q: `stars:>5000 (topic:framework OR topic:library OR topic:sdk OR topic:tool) is:public archived:false`,
       sort: "stars",
       order: "desc",
       per_page: TARGET_REPOS,
