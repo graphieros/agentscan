@@ -111,8 +111,38 @@ async function scanUser(
 }
 
 /**
+ * Check if a username is a known bot
+ */
+function isKnownBot(username: string): boolean {
+  const botPatterns = [
+    "dependabot",
+    "renovate",
+    "greenkeeper",
+    "github-actions",
+    "stale",
+    "snyk",
+    "codecov",
+    "coveralls",
+    "travis",
+    "circle",
+    "appveyor",
+    "azure-pipelines",
+    "netlify",
+    "vercel",
+    "heroku",
+    "aws-amplify",
+  ];
+
+  const lowerUsername = username.toLowerCase();
+  return (
+    botPatterns.some((pattern) => lowerUsername.includes(pattern)) ||
+    lowerUsername.endsWith("[bot]")
+  );
+}
+
+/**
  * Fetch PR authors from curated list of popular OSS libraries and frameworks
- * Gets the first 10 PRs from each repo - collects all authors including duplicates
+ * Gets the first 10 PRs from each repo - collects all authors including duplicates, skipping known bots
  */
 async function searchUsers(octokit: Octokit) {
   const PRS_PER_REPO = 10;
@@ -152,22 +182,28 @@ async function searchUsers(octokit: Octokit) {
       let prsFromThisRepo = 0;
 
       try {
-        // Get recent PRs from this repo
+        // Get recent PRs from this repo - fetch more to account for bots being filtered out
         const prs = await octokit.rest.pulls.list({
           owner,
           repo,
           state: "all",
           sort: "created",
           direction: "desc",
-          per_page: PRS_PER_REPO,
+          per_page: 50, // Fetch 50 to ensure we get 10 non-bot authors
         });
 
         console.log(`    Found ${prs.data.length} recent PRs`);
 
-        // Extract authors from the first 10 PRs - include duplicates
+        // Extract authors from PRs - skip known bots, include duplicates
         for (const pr of prs.data) {
           if (prsFromThisRepo >= PRS_PER_REPO) break;
           if (!pr.user?.login) continue;
+
+          // Skip known bots
+          if (isKnownBot(pr.user.login)) {
+            console.log(`      ⊘ ${pr.user.login} (bot - skipped)`);
+            continue;
+          }
 
           try {
             const fullProfile = await octokit.rest.users.getByUsername({
