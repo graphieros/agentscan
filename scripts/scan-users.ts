@@ -352,14 +352,8 @@ async function main() {
   const sortedRepos = Array.from(repoScores.entries()).sort(
     (a, b) => b[1] - a[1],
   );
-  const totalScore = Array.from(repoScores.values()).reduce(
-    (sum, score) => sum + score,
-    0,
-  );
-  for (const [repo, repoScore] of sortedRepos) {
-    const percentage =
-      totalScore > 0 ? ((repoScore / totalScore) * 100).toFixed(1) : "0.0";
-    console.log(`  ${repo}: ${percentage}%`);
+  for (const [repo, totalScore] of sortedRepos) {
+    console.log(`  ${repo}: ${totalScore.toFixed(2)}/1000`);
   }
 }
 
