@@ -163,6 +163,8 @@ async function searchUsers(octokit: Octokit) {
     "eslint/eslint",
     "python/cpython",
     "rolldown/rolldown",
+    "astral-sh/uv",
+    "astral-sh/ruff",
   ];
 
   const users: Array<{
