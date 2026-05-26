@@ -20,8 +20,8 @@ interface ScanResult {
   user_public_repos_count: number;
   events_count: number;
   repo_name: string;
-  pr_number?: number;
-  pr_status?: string;
+  pr_number: number;
+  pr_status: string;
 }
 
 interface ScanOptions {
