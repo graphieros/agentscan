@@ -109,7 +109,7 @@ const dataset = computed<VueUiHorizontalBarDatasetItem[]>(() => {
 <template>
   <div class="flex flex-col w-full">
     <CommonDateSelector :source="healthData" @select-date="setSelectedDate">
-      <template #label> Chose a date </template>
+      <template #label> Choose a date </template>
     </CommonDateSelector>
     <ClientOnly>
       <VueUiHorizontalBar :config="config" :dataset="dataset" />
