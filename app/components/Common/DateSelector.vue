@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 
-const props = defineProps<{
-  source: EcosystemHealthItem[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    source?: EcosystemHealthItem[];
+  }>(),
+  {
+    source: () => [],
+  },
+);
 
 const emit = defineEmits<{
   "select-date": [date: string | null];

@@ -19,8 +19,10 @@ function setSelectedDate(date: string | null) {
   selectedDate.value = date;
 }
 
+const healthData = computed(() => data.value ?? []);
+
 const source = computed(() => {
-  return convertToHorizontalBarDataset(data.value, selectedDate.value);
+  return convertToHorizontalBarDataset(healthData.value, selectedDate.value);
 });
 
 const config = computed<VueUiHorizontalBarConfig>(() => {
@@ -106,7 +108,7 @@ const dataset = computed<VueUiHorizontalBarDatasetItem[]>(() => {
 </script>
 <template>
   <div class="flex flex-col w-full">
-    <CommonDateSelector :source="data" @select-date="setSelectedDate">
+    <CommonDateSelector :source="healthData" @select-date="setSelectedDate">
       <template #label> Chose a date </template>
     </CommonDateSelector>
     <ClientOnly>

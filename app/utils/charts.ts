@@ -21,23 +21,30 @@ export function getCompleteDayRange(days: string[]): string[] {
 
 // Horizontal bar for package scores
 
+function getDayKey(date: string | Date) {
+  if (typeof date === "string") {
+    return date.slice(0, 10);
+  }
+
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
 export function convertToHorizontalBarDataset(
-  source: EcosystemHealthItem[],
+  source: EcosystemHealthItem[] = [],
   date?: Date | string | null,
 ): VueUiHorizontalBarDatasetItem[] {
-  const targetDay = date ? new Date(date) : null;
-
-  const isSameDay = (dateA: Date, dateB: Date) =>
-    dateA.getFullYear() === dateB.getFullYear() &&
-    dateA.getMonth() === dateB.getMonth() &&
-    dateA.getDate() === dateB.getDate();
+  const targetDay = date ? getDayKey(date) : null;
 
   const grouped = source.reduce<
     Record<string, { total: number; count: number }>
   >((acc, item) => {
-    const createdAt = new Date(item.created_at);
+    const createdDay = getDayKey(item.created_at);
 
-    if (targetDay && !isSameDay(createdAt, targetDay)) {
+    if (targetDay && createdDay !== targetDay) {
       return acc;
     }
 
