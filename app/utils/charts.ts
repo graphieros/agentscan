@@ -1,4 +1,5 @@
 import type { VueUiHorizontalBarDatasetItem } from "vue-data-ui/vue-ui-horizontal-bar";
+import type { EcosystemHealthItem } from "#imports";
 
 export function getCompleteDayRange(days: string[]): string[] {
   if (!days.length) {

@@ -46,7 +46,7 @@ export function interpolateHexColors({
   colors: string[];
   ratio: number;
 }): string {
-  if (!Array.isArray(colors)) {
+  if (!Array.isArray(colors) || colors.length === 0) {
     throw new Error("colors must be an array with at least 2 hex colors");
   }
 
