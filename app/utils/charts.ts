@@ -200,9 +200,10 @@ export function getClosedPrPercentageByRepoUntilDate(
   untilDate: string | Date,
   options: RepoClosedPrOptions = {},
 ) {
+  const { dateKey = "created_at" } = options;
   const limitDay = getDayKey(untilDate);
   const filteredSource = source.filter((entry) => {
-    return getDayKey(entry.created_at) <= limitDay;
+    return getDayKey(String(entry[dateKey])) <= limitDay;
   });
   return getClosedPrPercentageByRepo(filteredSource, options);
 }
