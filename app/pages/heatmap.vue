@@ -113,4 +113,7 @@ const timestamps = computed(() => {
   <div class="my-6 w-screen flex items-center justify-center text-3xl">
     <ChartFeaturedPackageHealthRanking class="max-w-150" />
   </div>
+  <div class="my-6 w-screen">
+    <ChartHealthResponseSparklines />
+  </div>
 </template>
