@@ -3,6 +3,7 @@ import type { IdentityClassification } from "@unveil/identity";
 import { identityConfig } from "@unveil/identity";
 
 const { data } = await useEcosystemHealth();
+const { formattedNextScanTime } = useNextScanTime();
 
 definePageMeta({
   layout: false,
@@ -119,9 +120,12 @@ const hasEnoughData = computed(() => {
                 A snapshot* of GitHub community activity patterns to measure the
                 overall ecosystem health.
               </p>
-              <p class="text-xs text-gh-muted/70">
+              <p class="text-xs text-gh-muted/70 mt-1">
                 *Each day, we analyze 10 PRs from a curated list of
                 repositories.
+              </p>
+              <p class="text-xs text-gh-muted/70 mt-1">
+                {{ formattedNextScanTime }}
               </p>
             </div>
           </header>
