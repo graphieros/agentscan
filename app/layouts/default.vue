@@ -12,9 +12,12 @@ const colorScheme = computed(() => {
 });
 
 useHead({
-  title: "AgentScan - GitHub AI Agent Detector",
+  title: "AgentScan - GitHub Automation Detector",
   meta: [
-    { property: "og:title", content: "AgentScan - GitHub AI Agent Detector" },
+    {
+      property: "og:title",
+      content: "AgentScan - GitHub Automation Detector",
+    },
     {
       property: "og:description",
       content: "An open experiment in detecting automation patterns on GitHub",
