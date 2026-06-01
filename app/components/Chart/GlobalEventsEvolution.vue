@@ -41,16 +41,12 @@ const automatedClosureRateData = computed(() => ({
 }));
 
 const averageClosureRate = computed<string>(() => {
-  return (
-    Math.round(
-      (((automatedClosureRateData.value.series as Array<number | null>).reduce(
-        (a, b) => (a ?? 0) + (b ?? 0),
-        0,
-      ) ?? 0) /
-        (automatedClosureRateData.value.series.length || 1)) *
-        100,
-    ) + "%"
-  );
+  const values = (
+    automatedClosureRateData.value.series as Array<number | null>
+  ).filter((v): v is number => v !== null);
+  if (values.length === 0) return "0%";
+  const sum = values.reduce((a, b) => a + b, 0);
+  return Math.round(sum / values.length) + "%";
 });
 
 const dataset = computed<VueUiXyDatasetItem[]>(() => {
