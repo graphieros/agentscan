@@ -247,3 +247,58 @@ export function getClosedPrPercentageEvolutionByRepo(
     },
   ]);
 }
+
+export function getClosedPrPercentageEvolutionTotal(
+  source: EcosystemHealthItem[] = [],
+  scoreBounds: ScoreBounds = [0, 100],
+  dateKey: keyof EcosystemHealthItem = "created_at",
+): VueUiXyDatasetItem {
+  const dates = getUniqueDatesFromSource(source, dateKey);
+
+  const series = dates.map((date) => {
+    const results = getClosedPrPercentageByRepoUntilDate(source, date, {
+      scoreBounds,
+    });
+
+    const totalEligible = results.reduce(
+      (sum, result) => sum + result.elligiblePrs,
+      0,
+    );
+
+    const totalClosed = results.reduce(
+      (sum, result) => sum + result.closedPrs,
+      0,
+    );
+
+    return totalEligible > 0 ? (totalClosed / totalEligible) * 100 : null;
+  });
+
+  return {
+    name: "Automation PR closure rate",
+    series: series.map((value) => (value === null ? null : Math.round(value))),
+    type: "line",
+    smooth: true,
+  };
+}
+
+export function getClosedPrPercentageTotal(
+  source: EcosystemHealthItem[] = [],
+  scoreBounds: ScoreBounds = [0, 100],
+): number | null {
+  const [minScore, maxScore] = scoreBounds;
+
+  const eligiblePrs = source.filter((item) => {
+    const score = item.score ?? 0;
+    return score >= minScore && score <= maxScore;
+  });
+
+  if (eligiblePrs.length === 0) {
+    return null;
+  }
+
+  const closedPrs = eligiblePrs.filter(
+    (item) => item.pr_status === "closed",
+  ).length;
+
+  return Math.round((closedPrs / eligiblePrs.length) * 100);
+}

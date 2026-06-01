@@ -91,6 +91,12 @@ const latestDayStats = computed<ClassificationStats | null>(() => {
   };
 });
 
+const automatedPrClosure = computed(() => ({
+  label: "Automation PR closure rate",
+  bgColor: "bg-gray-500",
+  percentage: getClosedPrPercentageTotal(data.value, [0, 50]) + "%",
+}));
+
 const MIN_DAY_DATA_COLLECTION = 4;
 const hasEnoughData = computed(() => {
   if (!data.value?.length) {
@@ -146,6 +152,17 @@ const hasEnoughData = computed(() => {
                   {{ latestDayStats?.[config.key].percentage }}% ({{
                     latestDayStats?.[config.key].count
                   }})
+                </span>
+              </p>
+            </li>
+            <li class="flex gap-2 items-center">
+              <span
+                :class="`size-2 ${automatedPrClosure.bgColor} block rounded-full`"
+              ></span>
+              <p class="text-sm">
+                {{ automatedPrClosure.label }}
+                <span class="text-gh-muted">
+                  {{ automatedPrClosure.percentage }}
                 </span>
               </p>
             </li>
