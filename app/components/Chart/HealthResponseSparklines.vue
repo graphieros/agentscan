@@ -111,8 +111,9 @@ function getTooltipContent(
 ) {
   const { absoluteIndex: index } = timeLabel;
   const datapoint = series[0] as unknown as XyAugmentedSeries;
-  const elligible = datapoint?.details?.elligiblePrs[index];
-  const closed = datapoint?.details?.closedPrs[index];
+  const elligible = datapoint?.details?.elligiblePrs?.[index];
+  const closed = datapoint?.details?.closedPrs?.[index];
+  if (closed == null || elligible == null) return "";
   return `${closed} / ${elligible}`;
 }
 </script>
