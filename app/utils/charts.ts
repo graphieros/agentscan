@@ -220,7 +220,14 @@ export function getClosedPrPercentageEvolutionByRepo(
 ): Array<Array<VueUiXyDatasetItem & { hasData: boolean }>> {
   const dates = getUniqueDatesFromSource(source, dateKey);
 
-  const repoMap = new Map<string, (number | null)[]>();
+  const repoMap = new Map<
+    string,
+    {
+      percentages: (number | null)[];
+      elligiblePrs: number[];
+      closedPrs: number[];
+    }
+  >();
 
   dates.forEach((date, dateIndex) => {
     const results = getClosedPrPercentageByRepoUntilDate(source, date, {
@@ -229,21 +236,36 @@ export function getClosedPrPercentageEvolutionByRepo(
 
     results.forEach((result) => {
       if (!repoMap.has(result.repo)) {
-        repoMap.set(result.repo, Array(dates.length).fill(null));
+        repoMap.set(result.repo, {
+          percentages: Array(dates.length).fill(null),
+          elligiblePrs: Array(dates.length).fill(0),
+          closedPrs: Array(dates.length).fill(0),
+        });
       }
-      const series = repoMap.get(result.repo);
-      if (!series) return;
-      series[dateIndex] = result.elligiblePrs > 0 ? result.percentage : null;
+
+      const repoData = repoMap.get(result.repo);
+
+      if (!repoData) return;
+
+      repoData.percentages[dateIndex] =
+        result.elligiblePrs > 0 ? result.percentage : null;
+
+      repoData.elligiblePrs[dateIndex] = result.elligiblePrs;
+      repoData.closedPrs[dateIndex] = result.closedPrs;
     });
   });
 
-  return Array.from(repoMap.entries()).map(([name, series]) => [
+  return Array.from(repoMap.entries()).map(([name, data]) => [
     {
       name,
-      series,
+      series: data.percentages,
       type: "line",
       smooth: true,
-      hasData: series.some((value) => value !== null),
+      hasData: data.percentages.some((value) => value !== null),
+      details: {
+        elligiblePrs: data.elligiblePrs,
+        closedPrs: data.closedPrs,
+      },
     },
   ]);
 }

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, shallowRef } from "vue";
-import { VueUiXy, type VueUiXyConfig } from "vue-data-ui/vue-ui-xy";
+import {
+  VueUiXy,
+  type VueUiXyConfig,
+  type VueUiXySeries,
+  type VueUiXyTooltipSlotProps,
+} from "vue-data-ui/vue-ui-xy";
 import "vue-data-ui/style.css";
 
 const { data } = useEcosystemHealth();
@@ -27,7 +32,7 @@ const sparklines = computed(() => {
   ).map((dataset) => {
     return dataset.map((datapoint) => ({
       ...datapoint,
-      color: colors.value.textMuted,
+      color: colors.value.textTransparent,
     }));
   });
 });
@@ -37,9 +42,20 @@ const config = computed<VueUiXyConfig>(() => ({
   chart: {
     userOptions: { show: false },
     legend: { show: false },
-    tooltip: { show: false },
     zoom: { show: false },
-    highlighter: { opacity: 0 },
+    tooltip: {
+      show: true,
+      teleportTo: "#sparklines",
+      backgroundOpacity: 0,
+      color: colors.value.text,
+      borderColor: "transparent",
+    },
+    highlighter: {
+      opacity: 0,
+      useLine: true,
+      lineDasharray: 0,
+      color: selectedRangeColor.value,
+    },
     padding: {
       top: 6,
       left: 4,
@@ -84,6 +100,21 @@ function getLastPlotLabel(serie: Record<string, any>) {
   const value = Number(lastPlot?.value ?? 0);
   return `${value.toFixed(0)}%`;
 }
+
+type XyAugmentedSeries = VueUiXySeries[number] & {
+  details: { elligiblePrs: number[]; closedPrs: number[] };
+};
+
+function getTooltipContent(
+  series: VueUiXyTooltipSlotProps["series"],
+  timeLabel: VueUiXyTooltipSlotProps["timeLabel"],
+) {
+  const { absoluteIndex: index } = timeLabel;
+  const datapoint = series[0] as unknown as XyAugmentedSeries;
+  const elligible = datapoint?.details?.elligiblePrs[index];
+  const closed = datapoint?.details?.closedPrs[index];
+  return `${closed} / ${elligible}`;
+}
 </script>
 
 <template>
@@ -126,7 +157,7 @@ function getLastPlotLabel(serie: Record<string, any>) {
     </label>
   </div>
 
-  <div class="grid grid-cols-2 gap-4 max-w-[600px] mx-auto">
+  <div class="grid grid-cols-2 gap-4 max-w-[600px] mx-auto" id="sparklines">
     <ClientOnly v-for="chart in sparklines" :key="chart[0]?.name">
       <div class="flex flex-col">
         <div class="text-sm mb-1">
@@ -139,6 +170,11 @@ function getLastPlotLabel(serie: Record<string, any>) {
           v-if="chart[0]?.hasData"
         >
           <VueUiXy :dataset="chart" :config="config">
+            <template #tooltip="{ series, timeLabel }">
+              <div class="text-gh-muted">
+                {{ getTooltipContent(series, timeLabel) }}
+              </div>
+            </template>
             <template #svg="{ svg }">
               <g
                 v-for="serie in Array.isArray(svg?.data) ? svg.data : []"
@@ -190,10 +226,6 @@ function getLastPlotLabel(serie: Record<string, any>) {
   --super-ease-out: cubic-bezier(0.15, 0.75, 0.35, 1);
 }
 
-:deep(.vue-data-ui-component svg:focus-visible) {
-  outline: none !important;
-}
-
 :deep(.vue-data-ui-component path),
 :deep(.last-datapoint),
 :deep(.value-label),
@@ -208,5 +240,11 @@ function getLastPlotLabel(serie: Record<string, any>) {
   :deep(.value-plot) {
     transition: none !important;
   }
+}
+</style>
+
+<style>
+#sparklines .vue-data-ui-tooltip {
+  padding: 2px 6px !important;
 }
 </style>
