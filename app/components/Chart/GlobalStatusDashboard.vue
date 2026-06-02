@@ -4,7 +4,7 @@ import { useColors } from "~/composables/useColors";
 import { useElementSize } from "@vueuse/core";
 
 const props = defineProps<{
-  data: Scan[] | undefined;
+  data: EcosystemHealthItem[] | undefined;
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
@@ -16,7 +16,7 @@ onMounted(async () => {
 
 const colors = useColors(rootEl);
 
-function createChartDataset(source: Scan[] = []): {
+function createChartDataset(source: EcosystemHealthItem[] = []): {
   categories: string[];
   dataset: VueUiStacklineDatasetItem[];
 } {
@@ -90,7 +90,13 @@ const { width, height } = useElementSize(chartContainer);
 <template>
   <div class="relative h-full w-full flex flex-col">
     <div class="flex-1 h-full no-chart-transition" ref="chartContainer">
-      <ChartGlobalEventsEvolution :data="dataset" :timestamps :width :height />
+      <ChartGlobalEventsEvolution
+        :data="dataset"
+        :timestamps
+        :width
+        :height
+        :raw-data="data"
+      />
     </div>
   </div>
 </template>

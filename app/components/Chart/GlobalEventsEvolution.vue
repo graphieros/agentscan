@@ -7,6 +7,7 @@ import {
 } from "vue-data-ui/vue-ui-xy";
 import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
 import { useColors } from "~/composables/useColors";
+import { getClosedPrPercentageEvolutionTotal } from "~/utils/charts";
 
 import("vue-data-ui/style.css");
 
@@ -15,6 +16,7 @@ const props = defineProps<{
   timestamps: string[];
   width: number;
   height: number;
+  rawData?: EcosystemHealthItem[];
 }>();
 
 const rootEl = shallowRef<HTMLElement | null>(null);
@@ -26,14 +28,37 @@ onMounted(async () => {
 
 const colors = useColors(rootEl);
 
-const dataset = computed<VueUiXyDatasetItem[]>(() =>
-  props.data.map((d) => ({
+const max = computed(() =>
+  Math.max(...props.data.flatMap((d) => d.series.map((d) => d ?? 0))),
+);
+
+const automatedClosureRateData = computed(() => ({
+  ...getClosedPrPercentageEvolutionTotal(props.rawData, [0, 50]),
+  scaleMin: 0,
+  scaleMax: 100,
+  color: "grey",
+  dashed: true,
+}));
+
+const averageClosureRate = computed<string>(() => {
+  const values = (
+    automatedClosureRateData.value.series as Array<number | null>
+  ).filter((v): v is number => v !== null);
+  if (values.length === 0) return "0%";
+  const sum = values.reduce((a, b) => a + b, 0);
+  return Math.round(sum / values.length) + "%";
+});
+
+const dataset = computed<VueUiXyDatasetItem[]>(() => {
+  const series = props.data.map((d) => ({
     ...d,
-    type: "line",
+    type: "line" as const,
     smooth: true,
     useArea: true,
-  })),
-);
+    scaleMax: max.value,
+  }));
+  return [...series, automatedClosureRateData.value];
+});
 
 const tooltipPosition = useChartTooltipPosition(chartRef);
 
@@ -74,6 +99,7 @@ const config = computed<VueUiXyConfig>(() => ({
         show: false,
         yAxis: {
           crosshairSize: 0,
+          useIndividualScale: true,
         },
         xAxisLabels: {
           show: false,
@@ -115,6 +141,7 @@ const config = computed<VueUiXyConfig>(() => ({
 
 <template>
   <ClientOnly>
+    <slot name="teleporter" v-bind="{ averageClosureRate }" />
     <VueUiXy ref="chartRef" :dataset :config>
       <template #area-gradient="{ series, id }">
         <linearGradient :id x1="0" x2="0" y1="0" y2="1">
@@ -139,7 +166,10 @@ const config = computed<VueUiXyConfig>(() => ({
               </svg>
             </div>
             <span :style="{ color: colors.text }">{{ series.name }}</span>
-            <span :style="{ color: colors.textMuted }">{{ series.value }}</span>
+            <span :style="{ color: colors.textMuted }">{{
+              series.value +
+              (series.slotAbsoluteIndex === dataset.length - 1 ? "%" : "")
+            }}</span>
           </div>
         </div>
       </template>
