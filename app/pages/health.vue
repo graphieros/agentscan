@@ -158,6 +158,10 @@ const hasEnoughData = computed(() => {
                 </span>
               </p>
             </li>
+          </ul>
+          <ul
+            class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center sm:mt-6"
+          >
             <li class="flex gap-2 items-center">
               <span
                 :class="`size-2 ${automatedPrClosure.bgColor} block rounded-full`"
