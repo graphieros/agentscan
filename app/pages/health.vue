@@ -160,7 +160,7 @@ const hasEnoughData = computed(() => {
             </li>
           </ul>
           <ul
-            class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center sm:mt-6"
+            class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center sm:mt-4"
           >
             <li class="flex gap-2 items-center">
               <span
