@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useElementSize } from "@vueuse/core";
-import type { VueUiStacklineDatasetItem } from "vue-data-ui/vue-ui-stackline";
 import {
   VueUiXy,
   type VueUiXyDatasetItem,
