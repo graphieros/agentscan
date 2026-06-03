@@ -181,7 +181,7 @@ export function getUniqueDatesFromSource(
   ).sort();
 }
 
-export function getClosedPrPercentageByRepoUntilDate(
+export function getClosedPrPercentageByRepoForDate(
   source: EcosystemHealthItem[],
   untilDate: string | Date,
   options: RepoClosedPrOptions = {},
@@ -242,7 +242,7 @@ export function getClosedPrPercentageEvolutionByRepo(
   >();
 
   dates.forEach((date, dateIndex) => {
-    const results = getClosedPrPercentageByRepoUntilDate(source, date, {
+    const results = getClosedPrPercentageByRepoForDate(source, date, {
       scoreBounds,
       dateKey,
     });
@@ -289,7 +289,7 @@ export function getClosedPrPercentageEvolutionTotal(
   const dates = getUniqueDatesFromSource(source, dateKey);
 
   const series = dates.map((date) => {
-    const results = getClosedPrPercentageByRepoUntilDate(source, date, {
+    const results = getClosedPrPercentageByRepoForDate(source, date, {
       scoreBounds,
     });
 
@@ -308,7 +308,7 @@ export function getClosedPrPercentageEvolutionTotal(
 
   return {
     name: "Automation PR closure rate",
-    series: series.map((value) => (value === null ? null : Math.round(value))),
+    series: series.map((value) => Math.round(value)),
     type: "line",
     smooth: true,
   };
