@@ -291,6 +291,7 @@ export function getClosedPrPercentageEvolutionTotal(
   const series = dates.map((date) => {
     const results = getClosedPrPercentageByRepoForDate(source, date, {
       scoreBounds,
+      dateKey,
     });
 
     const totalEligible = results.reduce(
