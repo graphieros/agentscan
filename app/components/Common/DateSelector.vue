@@ -86,6 +86,7 @@ watch(
   (dates) => {
     if (!dates.length) {
       selectedDate.value = null;
+      lastSelectedDate.value = null;
       emit("select-date", null);
       return;
     }
