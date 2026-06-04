@@ -181,14 +181,22 @@ function parseDate(date: string) {
     </label>
 
     <div class="flex items-center justify-between gap-2">
-      <button type="button" @click="goToPreviousMonth">
+      <button
+        type="button"
+        aria-label="Go to previous month"
+        @click="goToPreviousMonth"
+      >
         <span
           class="i-carbon-chevron-left w-3 h-3 text-gh-text-muted"
           aria-hidden="true"
         />
       </button>
       <strong>{{ visibleMonthLabel }}</strong>
-      <button type="button" @click="goToNextMonth">
+      <button
+        type="button"
+        aria-label="Go to next month"
+        @click="goToNextMonth"
+      >
         <span
           class="i-carbon-chevron-right w-3 h-3 text-gh-text-muted"
           aria-hidden="true"
