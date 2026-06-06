@@ -78,15 +78,15 @@ const latestDayStats = computed<ClassificationStats | null>(() => {
   return {
     organic: {
       count: counts.organic,
-      percentage: formatPercentage((counts.organic / totalCount) * 100) ?? 0,
+      percentage: formatPercentage((counts.organic / totalCount) * 100),
     },
     mixed: {
       count: counts.mixed,
-      percentage: formatPercentage((counts.mixed / totalCount) * 100) ?? 0,
+      percentage: formatPercentage((counts.mixed / totalCount) * 100),
     },
     automation: {
       count: counts.automation,
-      percentage: formatPercentage((counts.automation / totalCount) * 100) ?? 0,
+      percentage: formatPercentage((counts.automation / totalCount) * 100),
     },
   };
 });
