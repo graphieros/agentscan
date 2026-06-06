@@ -78,15 +78,15 @@ const latestDayStats = computed<ClassificationStats | null>(() => {
   return {
     organic: {
       count: counts.organic,
-      percentage: formatPercentage((counts.organic / totalCount) * 100),
+      percentage: formatPercentage((counts.organic / totalCount) * 100) ?? 0,
     },
     mixed: {
       count: counts.mixed,
-      percentage: formatPercentage((counts.mixed / totalCount) * 100),
+      percentage: formatPercentage((counts.mixed / totalCount) * 100) ?? 0,
     },
     automation: {
       count: counts.automation,
-      percentage: formatPercentage((counts.automation / totalCount) * 100),
+      percentage: formatPercentage((counts.automation / totalCount) * 100) ?? 0,
     },
   };
 });
@@ -110,6 +110,19 @@ const hasEnoughData = computed(() => {
 
   return uniqueDates.size >= MIN_DAY_DATA_COLLECTION;
 });
+
+const { progression } = useEcosystemHealthCategoryProgression();
+
+function formatTrend(value: number) {
+  if (value > 0) return `+${(value * 100).toFixed(0)}%`;
+  return `${(value * 100).toFixed(0)}%`;
+}
+
+function getTrendArrow(value: number) {
+  if (value > 0) return "i-carbon-arrow-up-right";
+  if (value < 0) return "i-carbon-arrow-down-right";
+  return "i-carbon-arrow-right";
+}
 </script>
 
 <template>
@@ -149,12 +162,25 @@ const hasEnoughData = computed(() => {
               <span
                 :class="`size-2 ${config.bgColor} block rounded-full`"
               ></span>
+
               <p class="text-sm">
                 {{ config.label }}
+
+                <span class="text-gh-muted ml-1">
+                  ({{
+                    Math.round(
+                      Number(latestDayStats?.[config.key]?.percentage ?? 0),
+                    )
+                  }}%)
+                </span>
+
                 <span class="text-gh-muted">
-                  {{ latestDayStats?.[config.key].percentage }}% ({{
-                    latestDayStats?.[config.key].count
-                  }})
+                  <span
+                    :class="getTrendArrow(progression[config.key].trend)"
+                    class="text-gh-text shrink-0"
+                    style="vertical-align: middle"
+                  />
+                  {{ formatTrend(progression[config.key].trend) }}
                 </span>
               </p>
             </li>

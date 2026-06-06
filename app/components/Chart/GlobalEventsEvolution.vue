@@ -12,6 +12,7 @@ import { getClosedPrPercentageEvolutionTotal } from "~/utils/charts";
 import("vue-data-ui/style.css");
 
 const { data } = await useEcosystemHealth();
+const { dates, countsByDate } = useEcosystemHealthCountsByDate();
 
 const chartContainer = useTemplateRef<HTMLElement>("chartContainer");
 const { width, height } = useElementSize(chartContainer);
@@ -34,41 +35,10 @@ const automatedClosureRateData = computed(() => ({
 }));
 
 function composeRawDataset(): VueUiXyDatasetItem[] {
-  const sumsByDate: Record<
-    string,
-    {
-      automation: number;
-      mixed: number;
-      organic: number;
-    }
-  > = {};
-
-  const categories = [...new Set(data.value.map((d) => d.created_at))].sort();
-
-  categories.forEach((date) => {
-    sumsByDate[date] = {
-      automation: 0,
-      mixed: 0,
-      organic: 0,
-    };
-  });
-
-  data.value.forEach((d) => {
-    const dateSums = sumsByDate[d.created_at];
-    if (!dateSums) return;
-    if (d.score <= 50) {
-      dateSums.automation += 1;
-    } else if (d.score <= 70) {
-      dateSums.mixed += 1;
-    } else {
-      dateSums.organic += 1;
-    }
-  });
-
   return [
     {
       name: "Organic",
-      series: categories.map((date) => sumsByDate[date]?.organic ?? 0),
+      series: dates.value.map((date) => countsByDate.value[date]?.organic ?? 0),
       color: colors.value.greenLine,
       type: "line",
       smooth: true,
@@ -76,7 +46,7 @@ function composeRawDataset(): VueUiXyDatasetItem[] {
     },
     {
       name: "Mixed",
-      series: categories.map((date) => sumsByDate[date]?.mixed ?? 0),
+      series: dates.value.map((date) => countsByDate.value[date]?.mixed ?? 0),
       color: colors.value.amber,
       type: "line",
       smooth: true,
@@ -84,7 +54,9 @@ function composeRawDataset(): VueUiXyDatasetItem[] {
     },
     {
       name: "Automation",
-      series: categories.map((date) => sumsByDate[date]?.automation ?? 0),
+      series: dates.value.map(
+        (date) => countsByDate.value[date]?.automation ?? 0,
+      ),
       color: colors.value.dangerHover,
       type: "line",
       smooth: true,
