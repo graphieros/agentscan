@@ -87,17 +87,12 @@ const dataset = computed<VueUiXyDatasetItem[]>(() => [
   automatedClosureRateData.value,
 ]);
 
-const timestamps = computed(() => {
-  if (!data.value?.length) return [];
-  return [...new Set(data.value.map((item) => item.created_at))].sort();
-});
-
 const tooltipPosition = useChartTooltipPosition(chartRef);
 
 const progressionLabelOffsetX = 6; // compensate hard-coded internal in VueUiXy
 
 const viewBoxPadding = computed(() => {
-  const maxSeries = timestamps.value.length;
+  const maxSeries = dates.value.length;
   if (maxSeries <= 1) return { left: 0, right: 0 };
   const halfVueUiXyDatapointStep = width.value / (2 * (maxSeries - 1));
   return {
@@ -135,7 +130,7 @@ const config = computed<VueUiXyConfig>(() => ({
         },
         xAxisLabels: {
           show: false,
-          values: timestamps.value,
+          values: dates.value,
           datetimeFormatter: {
             enable: true,
             useUTC: true,
