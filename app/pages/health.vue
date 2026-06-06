@@ -123,6 +123,18 @@ function getTrendArrow(value: number) {
   if (value < 0) return "i-carbon-arrow-down-right";
   return "i-carbon-arrow-right";
 }
+
+function getTrendColor({
+  value,
+  reversed = false,
+}: {
+  value: number;
+  reversed?: boolean;
+}) {
+  if (value > 0) return reversed ? "text-gh-red" : "text-gh-green";
+  if (value < 0) return reversed ? "text-gh-green" : "text-gh-red";
+  return "text-gh-muted";
+}
 </script>
 
 <template>
@@ -167,17 +179,20 @@ function getTrendArrow(value: number) {
                 {{ config.label }}
 
                 <span class="text-gh-muted ml-1">
-                  ({{
-                    Math.round(
-                      Number(latestDayStats?.[config.key]?.percentage ?? 0),
-                    )
-                  }}%)
+                  {{ latestDayStats?.[config.key]?.percentage }}%
                 </span>
 
-                <span class="text-gh-muted">
+                <span
+                  :class="[
+                    getTrendColor({
+                      value: progression[config.key].trend,
+                      reversed: config.key !== 'organic',
+                    }),
+                  ]"
+                >
                   <span
-                    :class="getTrendArrow(progression[config.key].trend)"
-                    class="text-gh-text shrink-0"
+                    :class="[getTrendArrow(progression[config.key].trend)]"
+                    class="shrink-0"
                     style="vertical-align: middle"
                   />
                   {{ formatTrend(progression[config.key].trend) }}
