@@ -8,6 +8,7 @@ import {
 import { useChartTooltipPosition } from "~/composables/useChartTooltipPosition";
 import { useColors } from "~/composables/useColors";
 import { getClosedPrPercentageEvolutionTotal } from "~/utils/charts";
+import { identityConfig } from "@unveil/identity";
 
 import("vue-data-ui/style.css");
 
@@ -27,7 +28,10 @@ onMounted(async () => {
 const colors = useColors(rootEl);
 
 const automatedClosureRateData = computed(() => ({
-  ...getClosedPrPercentageEvolutionTotal(data.value, [0, 50]),
+  ...getClosedPrPercentageEvolutionTotal(data.value, [
+    0,
+    identityConfig.THRESHOLD_SUSPICIOUS,
+  ]),
   scaleMin: 0,
   scaleMax: 100,
   color: "grey",
