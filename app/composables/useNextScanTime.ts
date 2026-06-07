@@ -38,8 +38,8 @@ const SCAN_SCHEDULE: Record<number, { hour: number; minute: number }> = {
   31: { hour: 6, minute: 51 },
 };
 
-// Buffer to account for GitHub workflow delays (~40 min) + scan time (~6 min)
-const SCAN_TIME_BUFFER_MINUTES = 50;
+// Buffer to account for GitHub workflow delays + scan time
+const SCAN_TIME_BUFFER_MINUTES = 30;
 
 function getNextScanTime(currentDate: Date = new Date()): Date {
   const now = dayjs.utc(currentDate);
