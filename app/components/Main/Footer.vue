@@ -29,15 +29,18 @@ const unveilIdentityVersion = unveilIdentityPackage.version;
             <h4
               class="text-xs font-semibold text-gh-text mb-3 uppercase tracking-wider"
             >
-              About
+              Disclaimer
             </h4>
             <p class="text-xs text-gh-muted/80 leading-relaxed mb-3">
               Results are based on pattern analysis and should be interpreted as
               <span class="font-medium">possible signals</span>, not
               conclusions.
             </p>
-            <p class="text-xs text-gh-muted/70">
+            <p class="text-xs text-gh-muted/70 mb-3">
               Always verify findings with additional context.
+            </p>
+            <p class="text-xs text-gh-muted/70">
+              GitHub has no association with this website.
             </p>
           </div>
         </div>
