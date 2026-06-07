@@ -561,7 +561,7 @@ function getZapIconPath({ x, y }: { x: number; y: number }) {
     </VueUiXy>
     <div v-else class="w-full h-40 flex place-items-center justify-center">
       <div class="flex flex-col items-center gap-4">
-        <span class="i-carbon:chart-line-smooth text-gh-muted"></span>
+        <span class="i-lucide:circle-dashed text-gh-muted"></span>
         <div class="flex flex-col items-center">
           <p class="text-gh-muted text-base">Insufficient activity data</p>
           <p class="text-gh-muted/50 text-sm">

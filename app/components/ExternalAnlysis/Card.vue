@@ -23,7 +23,7 @@ const counter = computed<number>(() => {
     >
       <div class="flex items-center justify-between">
         <h3 class="flex items-center gap-2 text-sm">
-          <span class="i-carbon:warning"></span>
+          <span class="i-lucide:triangle-alert"></span>
           <span>Suspicious Activity Reported</span>
         </h3>
         <div class="flex items-center gap-3">
@@ -34,7 +34,7 @@ const counter = computed<number>(() => {
           </span>
           <span
             :class="[
-              'i-carbon:chevron-down text-base transition-transform',
+              'i-lucide:chevron-down text-base transition-transform',
               isDisclosureOpen && 'rotate-180',
             ]"
           />

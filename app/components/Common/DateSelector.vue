@@ -187,7 +187,7 @@ function parseDate(date: string) {
         @click="goToPreviousMonth"
       >
         <span
-          class="i-carbon-chevron-left w-3 h-3 text-gh-text-muted"
+          class="i-lucide-chevron-left w-3 h-3 text-gh-text-muted"
           aria-hidden="true"
         />
       </button>
@@ -198,7 +198,7 @@ function parseDate(date: string) {
         @click="goToNextMonth"
       >
         <span
-          class="i-carbon-chevron-right w-3 h-3 text-gh-text-muted"
+          class="i-lucide-chevron-right w-3 h-3 text-gh-text-muted"
           aria-hidden="true"
         />
       </button>
@@ -246,7 +246,7 @@ function parseDate(date: string) {
       >
         <span
           v-if="selectedDate === firstAvailableDate"
-          class="i-carbon-circle-solid w-1.5 h-1.5 text-gh-text-muted"
+          class="i-lucide:circle-check size-3 text-gh-text-muted"
           aria-hidden="true"
         />
         <span> First entry </span>
@@ -264,7 +264,7 @@ function parseDate(date: string) {
       >
         <span
           v-if="selectedDate === lastAvailableDate"
-          class="i-carbon-circle-solid w-1.5 h-1.5 text-gh-text-muted"
+          class="i-lucide:circle-check size-3 text-gh-text-muted"
           aria-hidden="true"
         />
         <span> Last entry </span>
@@ -282,7 +282,7 @@ function parseDate(date: string) {
     >
       <span
         v-if="!selectedDate"
-        class="i-carbon-circle-solid w-1.5 h-1.5 text-gh-text-muted"
+        class="i-lucide:circle-check size-3 text-gh-text-muted"
         aria-hidden="true"
       />
       <span> All entries cumulated</span>

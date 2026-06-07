@@ -100,14 +100,14 @@ const scoreStyle = computed<ScoreStyle>(() => {
 
 const classificationIcon = computed<string>(() => {
   if (classification.value === "organic") {
-    return "i-carbon:growth";
+    return "i-lucide:heart-handshake";
   }
 
   if (classification.value === "mixed") {
-    return "i-carbon:activity";
+    return "i-lucide:blend";
   }
 
-  return "i-carbon:meter-alt";
+  return "i-lucide:shield-alert";
 });
 
 const flagAccountUrl = computed<string>(() => {

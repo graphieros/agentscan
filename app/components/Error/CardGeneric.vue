@@ -9,7 +9,7 @@ defineProps<{
     class="bg-gh-card p-6 rounded-2 border-2 border-solid border-gh-border text-center"
   >
     <span
-      class="i-carbon:wind-power text-xl text-gh-muted mx-auto mb-4 block"
+      class="i-lucide:badge-x text-xl text-gh-muted mx-auto mb-4 block"
       aria-hidden="true"
     />
 

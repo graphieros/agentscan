@@ -29,10 +29,6 @@ const filteredItems = computed(() => {
   return items.value.filter((item) => fuzzySearch(query, item.username));
 });
 
-definePageMeta({
-  layout: "minimal",
-});
-
 useHead({
   title: "Verified automations | AgentScan",
   meta: [

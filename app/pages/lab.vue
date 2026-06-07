@@ -7,7 +7,7 @@ import type { VueUiStacklineDatasetItem } from "vue-data-ui/vue-ui-stackline";
 const { data } = useEcosystemHealth();
 
 definePageMeta({
-  layout: false,
+  layout: "default",
 });
 
 const rootEl = shallowRef<HTMLElement | null>(null);
@@ -107,51 +107,49 @@ const timestamps = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 h-svh">
-    <header class="px-4 py-2">
-      <NuxtLink to="/" aria-label="Homepage">
-        <span class="i-carbon-scan relative top-1 text-gh-text text-xl" />
-      </NuxtLink>
-    </header>
-    <section class="flex flex-col gap-6 h-full px-8">
-      <div class="h-full flex flex-col items-center justify-center w-full">
-        <div class="mx-auto max-w-3xl p-8">
-          <header class="text-center">
-            <h1 class="text-2xl font-semibold">The Lab</h1>
-            <p class="text-gh-muted mt-1 mb-8">Sh*t can be broken here.</p>
-            <div
-              class="mt-4 p-4 bg-gh-card border-1 border-solid border-gh-border rounded-2 text-center"
-            >
-              <span class="i-carbon:flood-warning text-2xl mb-2"></span>
-              <p class="text-sm text-gh-text leading-relaxed">
-                This page is a sandbox where we test new ideas and features.
-                Things here may break, data might be inaccurate, or features
-                could disappear entirely. Take everything on this page with a
-                grain of salt and treat it as early-stage exploration, not
-                production-ready tools.
-              </p>
-            </div>
-          </header>
+  <section class="flex flex-col gap-6 h-full">
+    <div class="h-full flex flex-col items-center justify-center w-full">
+      <header class="text-center">
+        <h1 class="text-2xl font-semibold">The Lab</h1>
+        <p class="text-gh-muted mt-1 mb-8">Sh*t can be broken here.</p>
+        <div
+          class="mt-4 p-4 bg-gh-card border-1 border-solid border-gh-border rounded-2 text-center"
+        >
+          <div
+            aria-hidden="true"
+            class="flex gap-2 items-center justify-center text-xl text-gh-text/60 mb-2"
+          >
+            <span class="i-lucide:flask-conical"></span>
+            <span class="i-lucide:skull"></span>
+            <span class="i-lucide:triangle-alert"></span>
+          </div>
+          <p class="text-sm text-gh-text leading-relaxed">
+            This page is a sandbox where we test new ideas and features. Things
+            here may break, data might be inaccurate, or features could
+            disappear entirely. Take everything on this page with a grain of
+            salt and treat it as early-stage exploration, not production-ready
+            tools.
+          </p>
         </div>
-      </div>
+      </header>
+    </div>
 
-      <div
-        class="flex flex-col gap-20 items-center justify-center max-w-4xl mx-auto pb-12 w-full px-4"
-      >
-        <div>
-          <ChartHealthResponseSparklines />
-        </div>
-        <div class="w-full">
-          <ChartFeaturedPackageHealthRanking />
-        </div>
-        <div class="w-full">
-          <ChartGlobalEventsHeatmap :data="dataset" :timestamps />
-        </div>
-        <div class="w-full">
-          <h2 class="text-xl font-semibold mb-4">Scan Results by User ID</h2>
-          <AnalysisScanListTable />
-        </div>
+    <div
+      class="flex flex-col gap-20 items-center justify-center pb-12 w-full px-4 mt-24"
+    >
+      <div>
+        <ChartHealthResponseSparklines />
       </div>
-    </section>
-  </div>
+      <div class="w-full">
+        <ChartFeaturedPackageHealthRanking />
+      </div>
+      <div class="w-full">
+        <ChartGlobalEventsHeatmap :data="dataset" :timestamps />
+      </div>
+      <div class="w-full">
+        <h2 class="text-xl font-semibold mb-4">Scan Results by User ID</h2>
+        <AnalysisScanListTable />
+      </div>
+    </div>
+  </section>
 </template>

@@ -20,7 +20,7 @@ const isFlaggedAccount = computed(() => {
   >
     <template v-if="isFlaggedAccount">
       <span
-        class="i-carbon:gift text-xl text-gh-muted mx-auto mb-4 block"
+        class="i-lucide:gift text-xl text-gh-muted mx-auto mb-4 block"
         aria-hidden="true"
       />
       <h3 class="text-xl font-mono text-gh-text mb-1">Good news</h3>
@@ -30,7 +30,7 @@ const isFlaggedAccount = computed(() => {
     </template>
     <template v-else>
       <span
-        class="i-carbon:error text-xl text-gh-muted mx-auto mb-4 block"
+        class="i-lucide:ghost text-xl text-gh-muted mx-auto mb-4 block"
         aria-hidden="true"
       />
       <h3 class="text-xl font-mono text-gh-text mb-1">User not found</h3>

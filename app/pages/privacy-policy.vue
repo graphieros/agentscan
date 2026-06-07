@@ -1,8 +1,4 @@
-<script setup lang="ts">
-definePageMeta({
-  layout: "minimal",
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <h1 class="text-2xl font-semibold">Privacy Policy</h1>

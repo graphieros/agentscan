@@ -35,14 +35,14 @@ defineProps<{
       >
         <li class="flex items-center gap-1">
           <span
-            class="i-carbon-user-multiple hidden @md:flex shrink-0"
+            class="i-lucide:users hidden @md:flex shrink-0"
             aria-hidden="true"
           />
           {{ user.followers }} followers
         </li>
         <li class="flex items-center gap-1">
           <span
-            class="i-carbon-repo-source-code hidden @md:flex shrink-0"
+            class="i-lucide:package hidden @md:flex shrink-0"
             aria-hidden="true"
           />
           <span v-if="user.public_repos === 0">No repos</span>
@@ -50,7 +50,7 @@ defineProps<{
         </li>
         <li class="flex items-center gap-1">
           <span
-            class="i-carbon-calendar hidden @md:flex shrink-0"
+            class="i-lucide:calendar hidden @md:flex shrink-0"
             aria-hidden="true"
           />
           Since
