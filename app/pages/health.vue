@@ -10,19 +10,19 @@ definePageMeta({
 });
 
 useHead({
-  title: "Ecosystem health | AgentScan",
+  title: "GitHub Ecosystem Health | AgentScan",
   meta: [
     {
       name: "description",
       content:
-        "Track GitHub ecosystem health with daily analysis of 100 unique accounts from trending repositories. Monitor automation, mixed, and organic activity patterns over time to understand ecosystem trends.",
+        "A snapshot of community contribution patterns across the ecosystem.",
     },
-    { property: "og:title", content: "Ecosystem health | AgentScan" },
+    { property: "og:title", content: "GitHub Ecosystem Health | AgentScan" },
     { property: "og:image", content: "/health.png" },
     {
       property: "og:description",
       content:
-        "A snapshot of GitHub community activity patterns to measure the overall ecosystem health.",
+        "A snapshot of community contribution patterns across the ecosystem.",
     },
     { property: "og:type", content: "website" },
   ],
