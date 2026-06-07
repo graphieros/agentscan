@@ -143,14 +143,14 @@ function getTrendColor({
       class="h-full flex flex-col items-center justify-center w-full relative"
     >
       <div class="mx-auto max-w-2xl w-full">
-        <header class="text-center mt-24">
+        <header class="text-center mt-24 px-4">
           <h1 class="text-2xl font-semibold">GitHub Ecosystem Health</h1>
           <div class="text-gh-muted mt-1 flex flex-col text-pretty">
             <p>
               A snapshot* of community contribution patterns across the
-              ecosystem.
+              ecosystem
             </p>
-            <p class="text-xs text-gh-muted/70 mt-1">
+            <p class="text-xs text-gh-muted/70 mt-1 text-pretty">
               *Each day, we analyze 10 PRs from a curated
               <NuxtLink
                 class="underline hover:text-gh-text"
@@ -159,7 +159,6 @@ function getTrendColor({
                 to="https://github.com/MatteoGabriele/agentscan/tree/main/shared/daily-scan.ts"
                 >list of repositories</NuxtLink
               >
-              .
             </p>
           </div>
         </header>

@@ -68,17 +68,29 @@ onBeforeUnmount(() => {
           <li>
             <NuxtLink
               to="/health"
-              class="inline-flex items-center text-gh-muted hover:text-gh-text transition-colors text-lg md:text-sm"
+              v-slot="{ isActive }"
+              class="inline-flex items-center text-lg md:text-sm"
             >
-              GitHub Ecosystem Health
+              <span
+                class="text-gh-muted hover:text-gh-text transition-colors"
+                :class="{ 'text-gh-text': isActive }"
+              >
+                GitHub Ecosystem Health
+              </span>
             </NuxtLink>
           </li>
           <li>
             <NuxtLink
               to="/lab"
+              v-slot="{ isActive }"
               class="inline-flex items-center text-gh-muted hover:text-gh-text transition-colors text-lg md:text-sm"
             >
-              The lab
+              <span
+                class="text-gh-muted hover:text-gh-text transition-colors"
+                :class="{ 'text-gh-text': isActive }"
+              >
+                The lab
+              </span>
             </NuxtLink>
           </li>
           <li class="hidden md:block w-px h-4 bg-gh-border/80"></li>
