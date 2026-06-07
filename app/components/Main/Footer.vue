@@ -51,24 +51,41 @@ const unveilIdentityVersion = unveilIdentityPackage.version;
             >
               Links
             </h4>
-            <div class="flex flex-col gap-3">
-              <NuxtLink
-                external
-                target="_blank"
-                to="https://github.com/matteogabriele/agentscan"
-                class="text-xs text-gh-muted/80 hover:text-gh-text transition-colors underline"
-              >
-                AgentScan
-              </NuxtLink>
-              <NuxtLink
-                external
-                target="_blank"
-                to="https://github.com/matteogabriele/agentscan-action"
-                class="text-xs text-gh-muted/80 hover:text-gh-text transition-colors underline"
-              >
-                AgentScan GitHub Action
-              </NuxtLink>
-            </div>
+            <ul class="flex flex-col">
+              <li>
+                <NuxtLink
+                  external
+                  target="_blank"
+                  to="https://github.com/matteogabriele/agentscan"
+                  class="text-xs text-gh-muted/80 hover:text-gh-text transition-colors underline"
+                >
+                  AgentScan repository
+                </NuxtLink>
+              </li>
+
+              <li>
+                <NuxtLink
+                  external
+                  target="_blank"
+                  to="https://github.com/matteogabriele/agentscan-action"
+                  class="text-xs text-gh-muted/80 hover:text-gh-text transition-colors underline"
+                >
+                  AgentScan Action repository
+                </NuxtLink>
+              </li>
+
+              <li>
+                <NuxtLink
+                  external
+                  target="_blank"
+                  title="RSS feed"
+                  to="/feed.xml"
+                  class="text-xs text-gh-muted/80 hover:text-gh-text transition-colors underline"
+                >
+                  Community flags RSS feed
+                </NuxtLink>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -77,7 +94,17 @@ const unveilIdentityVersion = unveilIdentityPackage.version;
         class="border-t border-gh-border/50 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
       >
         <p class="text-xs text-gh-muted/60">
-          Made with <span class="text-red-400">♥</span> · Contributions welcome
+          Made with <span class="text-red-400">♥</span> ·
+          <NuxtLink
+            external
+            target="_blank"
+            title="GitHub repository"
+            to="https://github.com/MatteoGabriele/agentscan"
+            class="underline hover:text-gh-text transition-colors"
+          >
+            Contributions
+          </NuxtLink>
+          welcome
         </p>
         <p class="text-xs text-gh-muted/60">
           Powered by

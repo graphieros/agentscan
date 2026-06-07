@@ -43,7 +43,7 @@ function clear() {
         @click="clear"
         class="absolute rounded-full hover:bg-gh-muted/30 transition-colors size-6 items-center justify-center text-gh-text flex top-1/2 right-2 -translate-y-1/2"
       >
-        <span class="i-carbon:close" />
+        <span class="i-lucide:x" />
       </button>
     </div>
 
@@ -51,7 +51,7 @@ function clear() {
       type="submit"
       class="py-2 px-6 bg-gh-green rounded-md text-white hover:bg-gh-green-hover flex justify-center items-center gap-2 font-mono"
     >
-      <span class="i-carbon-search" aria-hidden="true" />
+      <span class="i-lucide-search" aria-hidden="true" />
       Analyze
     </button>
   </form>

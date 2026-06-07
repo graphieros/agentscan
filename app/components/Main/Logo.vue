@@ -1,23 +1,29 @@
 <script setup lang="ts">
-const { headingLevel = "h1" } = defineProps<{
-  headingLevel?: "h1" | "h2";
+const props = defineProps<{
+  size?: "xs" | "sm" | "md" | "lg";
 }>();
+
+const sizeMap = {
+  xs: 20,
+  sm: 24,
+  md: 32,
+  lg: 48,
+};
+
+const logoSize = computed(() => sizeMap[props.size || "md"]);
 </script>
 
 <template>
-  <div class="text-center mb-8">
-    <div class="flex items-center justify-center gap-2 mb-2">
-      <NuxtLink to="/" aria-label="Homepage">
-        <span class="i-carbon-scan relative top-1 text-gh-text text-2xl" />
-      </NuxtLink>
-
-      <Component :is="headingLevel" class="text-3xl text-gh-text font-mono">
-        AgentScan
-      </Component>
-    </div>
-
-    <p class="text-gh-muted text-balance @md:text-wrap">
-      An open experiment in detecting automation patterns on GitHub
-    </p>
-  </div>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    :width="logoSize"
+    :height="logoSize"
+    viewBox="0 0 32 32"
+  >
+    <path
+      fill="currentColor"
+      d="M21 29H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16v2H5v22h16Z"
+    />
+    <path fill="currentColor" d="M15 9h2v14h-2zm12 0h2v14h-2zm-6 0h2v14h-2z" />
+  </svg>
 </template>
