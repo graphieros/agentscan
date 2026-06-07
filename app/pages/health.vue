@@ -51,8 +51,8 @@ type ClassificationConfig = {
 
 const classificationConfigs: ClassificationConfig[] = [
   { key: "organic", label: "Organic", bgColor: "bg-green-500" },
-  { key: "mixed", label: "Mixed", bgColor: "bg-amber-500" },
-  { key: "automation", label: "Automation", bgColor: "bg-orange-500" },
+  { key: "mixed", label: "Mixed", bgColor: "bg-gh-amber" },
+  { key: "automation", label: "Automation", bgColor: "bg-gh-danger-hover" },
 ];
 
 function formatPercentage(value: number): string {
@@ -131,38 +131,39 @@ function getTrendColor({
   value: number;
   reversed?: boolean;
 }) {
-  if (value > 0) return reversed ? "text-gh-red" : "text-gh-green";
-  if (value < 0) return reversed ? "text-gh-green" : "text-gh-red";
+  if (value > 0) return reversed ? "text-gh-danger-hover" : "text-gh-green";
+  if (value < 0) return reversed ? "text-gh-green" : "text-gh-danger-hover";
   return "text-gh-muted";
 }
 </script>
 
 <template>
   <section v-if="hasEnoughData" class="flex flex-col gap-6 h-full">
-    <div class="h-full flex flex-col items-center justify-center w-full">
-      <div class="mx-auto max-w-3xl p-8">
-        <header class="text-center">
-          <h1 class="text-2xl font-semibold">Ecosystem health</h1>
+    <div
+      class="h-full flex flex-col items-center justify-center w-full relative"
+    >
+      <div class="mx-auto max-w-2xl w-full">
+        <header class="text-center mt-24">
+          <h1 class="text-2xl font-semibold">GitHub Ecosystem Health</h1>
           <div class="text-gh-muted mt-1 flex flex-col text-pretty">
             <p>
-              A snapshot* of GitHub community activity patterns to measure the
-              overall ecosystem health.
+              A snapshot* of community contribution patterns across the
+              ecosystem.
             </p>
             <p class="text-xs text-gh-muted/70 mt-1">
-              *Each day, we analyze 10 PRs from a curated list of repositories.
-            </p>
-            <p class="text-xs text-gh-muted/70 mt-3">
-              {{ formattedNextScanTime }}
+              *Each day, we analyze 10 PRs from a curated list of 17
+              repositories.
             </p>
           </div>
         </header>
+
         <ul
-          class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center mt-12"
+          class="text-center flex flex-col md:flex-row gap-2 items-center md:text-left w-full justify-evenly mt-6 px-4 md:py-4 md:border-y md:border-y-gh-border/60"
         >
           <li
             v-for="config in classificationConfigs"
             :key="config.key"
-            class="flex gap-2 items-center"
+            class="flex gap-2 items-center flex-1 justify-center"
           >
             <span :class="`size-2 ${config.bgColor} block rounded-full`"></span>
 
@@ -191,14 +192,15 @@ function getTrendColor({
             </p>
           </li>
         </ul>
+
         <ul
-          class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center sm:mt-4"
+          class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center mt-4 mb-12 md:my-4"
         >
           <li class="flex gap-2 items-center">
             <span
               :class="`size-2 ${automatedPrClosure.bgColor} block rounded-full`"
             ></span>
-            <p class="text-sm">
+            <p class="text-sm text-gh-text">
               {{ automatedPrClosure.label }}
               <span class="text-gh-muted">
                 {{ automatedPrClosure.percentage }}
@@ -207,8 +209,15 @@ function getTrendColor({
           </li>
         </ul>
       </div>
+
       <div class="max-h-[300px] sm:max-h-[500px] w-full h-full">
         <ChartGlobalEventsEvolution />
+      </div>
+
+      <div class="absolute bottom-2 right-4 md:right-6">
+        <p class="text-xs text-gh-text/40 mt-3">
+          {{ formattedNextScanTime }}
+        </p>
       </div>
     </div>
   </section>

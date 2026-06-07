@@ -34,6 +34,7 @@ export default defineConfig({
         muted: "var(--text-muted)",
         blue: "var(--blue)",
         green: "var(--green)",
+        amber: "var(--amber)",
         "green-hover": "var(--green-hover)",
         "green-text": "var(--text-green)",
         "green-bg": "var(--green-bg)",

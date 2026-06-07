@@ -66,8 +66,8 @@ type ScoreStyle = {
 const scoreStyle = computed<ScoreStyle>(() => {
   if (hasCommunityFlag.value) {
     return {
-      text: "text-gh-danger",
-      border: "border-gh-danger",
+      text: "text-gh-danger-hover",
+      border: "border-gh-danger-hover",
     };
   }
 
@@ -80,8 +80,8 @@ const scoreStyle = computed<ScoreStyle>(() => {
 
   if (classification.value === "automation") {
     return {
-      text: "text-orange-500",
-      border: "border-orange-500",
+      text: "text-gh-danger-hover",
+      border: "border-gh-danger-hover",
     };
   }
 
@@ -185,7 +185,7 @@ useSeoAnalysis(identifyAnalysis, {
           class="mt-4 pt-4 border-t border-gh-border-light"
         >
           <p
-            class="flex gap-2 items-center mb-2 text-gh-danger font-mono text-base"
+            class="flex gap-2 items-center mb-2 text-gh-danger-hover font-mono text-base"
           >
             Community flagged
           </p>
@@ -198,7 +198,7 @@ useSeoAnalysis(identifyAnalysis, {
               :to="verifiedAutomation.issueUrl"
               target="_blank"
               external
-              class="text-gh-danger underline inline text-xs"
+              class="text-gh-danger-hover underline inline text-xs"
             >
               View issue
             </NuxtLink>

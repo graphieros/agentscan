@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ["@unocss/nuxt", "@nuxtjs/color-mode", "@nuxt/fonts"],
   plugins: ["~/plugins/simpleanalytics.client"],
 

@@ -70,7 +70,7 @@ onBeforeUnmount(() => {
               to="/health"
               class="inline-flex items-center text-gh-muted hover:text-gh-text transition-colors text-lg md:text-sm"
             >
-              Ecosystem health
+              GitHub Ecosystem Health
             </NuxtLink>
           </li>
           <li>

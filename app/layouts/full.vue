@@ -40,9 +40,6 @@ useHead({
     },
   ],
 });
-
-const route = useRoute();
-const isHomePage = computed<boolean>(() => route.name === "index");
 </script>
 
 <template>
@@ -52,7 +49,7 @@ const isHomePage = computed<boolean>(() => route.name === "index");
     <div class="min-h-svh flex flex-col">
       <MainHeader />
 
-      <main class="h-svh">
+      <main class="main-height">
         <slot />
       </main>
     </div>
@@ -60,3 +57,9 @@ const isHomePage = computed<boolean>(() => route.name === "index");
     <MainFooter />
   </div>
 </template>
+
+<style scoped>
+.main-height {
+  height: calc(100svh - 48px);
+}
+</style>
