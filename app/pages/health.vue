@@ -119,9 +119,9 @@ function formatTrend(value: number) {
 }
 
 function getTrendArrow(value: number) {
-  if (value > 0) return "i-carbon-arrow-up-right";
-  if (value < 0) return "i-carbon-arrow-down-right";
-  return "i-carbon-arrow-right";
+  if (value > 0) return "i-lucide:trending-up";
+  if (value < 0) return "i-lucide:trending-down";
+  return "i-lucide:trending-up-down";
 }
 
 function getTrendColor({
