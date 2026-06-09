@@ -1,6 +1,7 @@
 name: AgentScan
 
 on:
+  workflow_dispatch: # Allow manual trigger
   pull_request_target:
     types: [opened, reopened]
   issues:
