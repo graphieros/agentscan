@@ -140,10 +140,14 @@ useHead({
             <th class="text-right py-2 px-3 font-semibold text-gh-text">
               Pull Requests
             </th>
-            <th class="text-left py-2 px-3 font-semibold text-gh-text">
+            <th
+              class="hidden md:table-cell text-left py-2 px-3 font-semibold text-gh-text"
+            >
               First Detected
             </th>
-            <th class="text-left py-2 px-3 font-semibold text-gh-text">
+            <th
+              class="hidden md:table-cell text-left py-2 px-3 font-semibold text-gh-text"
+            >
               Last Detected
             </th>
           </tr>
@@ -165,7 +169,7 @@ useHead({
             <td class="py-3 px-3 text-right text-gh-muted">
               {{ item.totalPrs }}
             </td>
-            <td class="py-3 px-3 text-xs text-gh-muted">
+            <td class="hidden md:table-cell py-3 px-3 text-xs text-gh-muted">
               <span
                 v-if="item.firstDetected"
                 :title="`${formatDateNice(item.firstDetected)}`"
@@ -173,7 +177,7 @@ useHead({
                 {{ formatRelativeTime(item.firstDetected) }}
               </span>
             </td>
-            <td class="py-3 px-3 text-xs text-gh-muted">
+            <td class="hidden md:table-cell py-3 px-3 text-xs text-gh-muted">
               <span
                 v-if="item.lastDetected"
                 :title="`${formatDateNice(item.lastDetected)}`"
