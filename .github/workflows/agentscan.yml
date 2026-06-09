@@ -15,9 +15,10 @@ jobs:
       contents: read
     steps:
       - name: AgentScan
-        uses: MatteoGabriele/agentscan-action@98e87c8f1db0cdcd923f5eb756cc40582ce9abff
+        uses: MatteoGabriele/agentscan-action@398f020b627bb36e6491b4a52a1ce9ff64e2192e
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           skip-members: '["MatteoGabriele", "graphieros"]'
           auto-close: true
           auto-close-classifications: '["automations", "mixed"]'
+          message-organic: "![](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmhjcHc0dnd1YWVsYjgwaGgycHRtdW9qbnBicmp6cHJncnNta2hqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ae7SI3LoPYj8Q/giphy.gif)"
