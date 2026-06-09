@@ -45,7 +45,7 @@ useHead({
 <template>
   <header class="text-center md:text-left">
     <h1 class="text-2xl font-semibold">Community verified automations</h1>
-    <p class="text-gh-muted mt-1">
+    <p class="text-gh-muted mt-2">
       This is a list of accounts verified by the community as using heavy
       automation, spamming through automation, or operating as bots.
     </p>

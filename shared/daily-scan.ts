@@ -16,7 +16,7 @@ export const libraries = [
   "rolldown/rolldown",
   "astral-sh/uv",
   "astral-sh/ruff",
-];
+] as const;
 
 export const cicdBots = [
   "dependabot",
@@ -35,4 +35,5 @@ export const cicdBots = [
   "vercel",
   "heroku",
   "aws-amplify",
+  "eslintbot",
 ];

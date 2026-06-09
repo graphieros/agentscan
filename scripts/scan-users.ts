@@ -131,7 +131,7 @@ async function scanUser(
 function isKnownBot(username: string): boolean {
   const lowerUsername = username.toLowerCase();
   return (
-    cicdBots.some((pattern) => lowerUsername.includes(pattern)) ||
+    cicdBots.some((name) => lowerUsername.includes(name)) ||
     lowerUsername.endsWith("[bot]")
   );
 }

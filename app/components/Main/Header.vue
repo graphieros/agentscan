@@ -93,6 +93,20 @@ onBeforeUnmount(() => {
               </span>
             </NuxtLink>
           </li>
+          <li>
+            <NuxtLink
+              to="/detected-automations"
+              v-slot="{ isActive }"
+              class="inline-flex items-center text-lg md:text-sm"
+            >
+              <span
+                class="text-gh-muted hover:text-gh-text transition-colors"
+                :class="{ 'text-gh-text': isActive }"
+              >
+                Detected automations
+              </span>
+            </NuxtLink>
+          </li>
           <li class="hidden md:block w-px h-4 bg-gh-border/80"></li>
           <li>
             <NuxtLink
