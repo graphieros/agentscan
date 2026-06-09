@@ -90,10 +90,14 @@ useHead({
             <th class="text-right py-2 px-3 font-semibold text-gh-text">
               Pull Requests
             </th>
-            <th class="text-left py-2 px-3 font-semibold text-gh-text">
+            <th
+              class="hidden md:table-cell text-left py-2 px-3 font-semibold text-gh-text"
+            >
               First Detected
             </th>
-            <th class="text-left py-2 px-3 font-semibold text-gh-text">
+            <th
+              class="hidden md:table-cell text-left py-2 px-3 font-semibold text-gh-text"
+            >
               Last Detected
             </th>
           </tr>
@@ -112,10 +116,10 @@ useHead({
                 class="h-4 bg-gh-border rounded w-12 ml-auto animate-pulse"
               />
             </td>
-            <td class="py-3 px-3">
+            <td class="hidden md:table-cell py-3 px-3">
               <div class="h-4 bg-gh-border rounded w-1/3 animate-pulse" />
             </td>
-            <td class="py-3 px-3">
+            <td class="hidden md:table-cell py-3 px-3">
               <div class="h-4 bg-gh-border rounded w-1/3 animate-pulse" />
             </td>
           </tr>
