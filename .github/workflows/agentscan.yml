@@ -1,7 +1,7 @@
 name: AgentScan
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened]
   issues:
     types: [opened]
@@ -14,16 +14,9 @@ jobs:
       issues: write
       contents: read
     steps:
-      - name: Cache AgentScan analysis
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: .agentscan-cache
-          key: agentscan-cache-${{ github.actor }}
-          restore-keys: agentscan-cache-
       - name: AgentScan
         uses: MatteoGabriele/agentscan-action@98e87c8f1db0cdcd923f5eb756cc40582ce9abff
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           skip-members: "MatteoGabriele,graphieros"
-          cache-path: ".agentscan-cache"
           auto-close: true
