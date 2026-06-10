@@ -138,20 +138,19 @@ function getTrendColor({
 </script>
 
 <template>
-  <section v-if="hasEnoughData" class="flex flex-col gap-6 h-full">
+  <section v-if="hasEnoughData" class="flex flex-col gap-6 h-full pb-8 md:pb-0">
     <div
       class="h-full flex flex-col items-center justify-center w-full relative"
     >
       <div class="mx-auto max-w-2xl w-full">
-        <header class="text-center mt-24 px-4">
+        <header class="text-center mt-16 md:mt-24 px-4">
           <h1 class="text-2xl font-semibold">GitHub Ecosystem Health</h1>
           <div class="text-gh-muted mt-1 flex flex-col text-pretty">
             <p>
-              A snapshot* of community contribution patterns across the
-              ecosystem
+              A snapshot of community contribution patterns across the ecosystem
             </p>
             <p class="text-xs text-gh-muted/70 mt-1 text-pretty">
-              *Each day, we analyze 10 PRs from a curated
+              Each day, we analyze 10 PRs from a curated
               <NuxtLink
                 class="underline hover:text-gh-text"
                 external
@@ -200,7 +199,7 @@ function getTrendColor({
         </ul>
 
         <ul
-          class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center mt-4 mb-12 md:my-4"
+          class="text-center flex flex-col md:flex-row md:gap-6 items-center md:text-left w-full justify-center mt-2 mb-12 md:my-4"
         >
           <li class="flex gap-2 items-center">
             <span
@@ -220,7 +219,9 @@ function getTrendColor({
         <ChartGlobalEventsEvolution />
       </div>
 
-      <div class="absolute bottom-2 right-4 md:right-6">
+      <div
+        class="absolute -bottom-4 text-center md:text-right w-full md:bottom-2 right-0 md:right-6"
+      >
         <p class="text-xs text-gh-text/40 mt-3">
           {{ formattedNextScanTime }}
         </p>

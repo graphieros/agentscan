@@ -63,7 +63,7 @@ useHead({
 <template>
   <header class="text-center md:text-left text-pretty">
     <h1 class="text-2xl font-semibold">Detected automations</h1>
-    <p class="text-gh-text mt-2">
+    <p class="text-gh-muted mt-2">
       Accounts identified by the daily
       <NuxtLink to="/health" class="underline hover:text-gh-text">
         GitHub Ecosystem Health

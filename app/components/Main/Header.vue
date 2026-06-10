@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header class="h-12 flex justify-between items-center px-4 md:px-6 py-4">
+  <header class="h-12 flex justify-between items-center px-4 lg:px-6 py-4">
     <div>
       <NuxtLink
         v-if="!isHomePage"
@@ -43,77 +43,50 @@ onBeforeUnmount(() => {
 
     <div
       :class="{
-        'fixed inset-0 bg-gh-bg z-40 md:relative flex flex-col gap-4 p-4 h-svh md:h-auto md:block md:relative md:bg-none':
+        'fixed inset-0 bg-gh-bg z-40 lg:relative flex flex-col gap-4 p-4 h-svh lg:h-auto lg:block lg:relative lg:bg-none':
           isMenuOpen,
       }"
     >
-      <button @click="toggleMenu" class="md:hidden flex self-end">
+      <button @click="toggleMenu" class="lg:hidden flex self-end">
         <span v-if="isMenuOpen" class="i-lucide:x"></span>
         <span v-else class="i-lucide:menu"></span>
       </button>
 
       <nav
-        class="md:block h-full md:h-auto"
+        class="lg:block h-full lg:h-auto"
         :class="{
           hidden: !isMenuOpen,
         }"
       >
         <ul
-          class="flex items-center gap-4"
+          class="flex items-center gap-2 lg:gap-4"
           :class="{
-            'flex justify-center h-full flex-col gap-6 md:flex md:flex-row md:h-auto ':
+            'flex justify-center h-full flex-col lg:flex lg:flex-row lg:h-auto ':
               isMenuOpen,
           }"
         >
           <li>
-            <NuxtLink
-              to="/health"
-              v-slot="{ isActive }"
-              class="inline-flex items-center text-lg md:text-sm"
-            >
-              <span
-                class="text-gh-muted hover:text-gh-text transition-colors"
-                :class="{ 'text-gh-text': isActive }"
-              >
-                GitHub Ecosystem Health
-              </span>
-            </NuxtLink>
+            <MainMenuItem to="/health" label="GitHub Ecosystem Health" />
           </li>
           <li>
-            <NuxtLink
-              to="/lab"
-              v-slot="{ isActive }"
-              class="inline-flex items-center text-gh-muted hover:text-gh-text transition-colors text-lg md:text-sm"
-            >
-              <span
-                class="text-gh-muted hover:text-gh-text transition-colors"
-                :class="{ 'text-gh-text': isActive }"
-              >
-                The lab
-              </span>
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink
+            <MainMenuItem
               to="/detected-automations"
-              v-slot="{ isActive }"
-              class="inline-flex items-center text-lg md:text-sm"
-            >
-              <span
-                class="text-gh-muted hover:text-gh-text transition-colors"
-                :class="{ 'text-gh-text': isActive }"
-              >
-                Detected automations
-              </span>
-            </NuxtLink>
+              label="Detected automations"
+            />
           </li>
-          <li class="hidden md:block w-px h-4 bg-gh-border/80"></li>
+          <li>
+            <MainMenuItem to="/automations" label="Community automations" />
+          </li>
+          <li>
+            <MainMenuItem to="/lab" label="The lab" />
+          </li>
+          <li class="hidden lg:block w-px h-4 bg-gh-border/80"></li>
           <li>
             <NuxtLink
               external
               target="_blank"
               to="https://github.com/marketplace/actions/agentscan"
-              class="inline-flex items-center px-3.5 md:px-2.5 gap-1 py-1 font-medium text-md md:text-xs rounded-full border border-gh-border/80 text-gh-muted hover:text-gh-text hover:border-gh-border/60 transition-colors whitespace-nowrap"
+              class="inline-flex mt-4 lg:mt-0 items-center px-3.5 lg:px-2.5 gap-1 py-1 font-medium text-md lg:text-xs rounded-full border border-gh-border/80 text-gh-muted hover:text-gh-text hover:border-gh-border/60 transition-colors whitespace-nowrap"
               title="Use it as a GitHub Action"
             >
               GitHub action
