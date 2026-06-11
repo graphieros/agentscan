@@ -1,7 +1,7 @@
 export const libraries = [
   "nuxt/nuxt",
   "vuejs/core",
-  "facebook/react",
+  "react/react",
   "sveltejs/svelte",
   "vitejs/vite",
   "vitest-dev/vitest",
