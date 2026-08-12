@@ -27,14 +27,18 @@ function getTrend({ item, index }: DatapointItem) {
   }
 }
 
+// Test comment
 function getProgressionVsPrevious({ item, index }: DatapointItem) {
   const valueCurrent = props.rawDataset[item.slotAbsoluteIndex]?.series[index]
   const valuePrevious =
     props.rawDataset[item.slotAbsoluteIndex]?.series[index - 1]
+
   let delta = 0
+
   if (typeof valueCurrent === 'number' && typeof valuePrevious === 'number') {
     delta = valueCurrent - valuePrevious
   }
+
   return {
     color: getTrendColor({ value: delta, reversed: item.name !== 'Organic' }),
     formattedValue: formatProgressionPoints(delta),
